@@ -1,9 +1,10 @@
+
 "use client";
 
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
 import Footer from "../components/global/Footer";
-import CTA from "../components/main/CTA";
 import {
   LanguageProvider,
   useLanguage,
@@ -75,14 +76,7 @@ function Icon({
     case "design":
       return (
         <svg {...common}>
-          <rect
-            x="3.5"
-            y="4"
-            width="17"
-            height="16"
-            rx="3"
-            {...props}
-          />
+          <rect x="3.5" y="4" width="17" height="16" rx="3" {...props} />
           <path d="M7.5 9h9M7.5 13h5" {...props} />
         </svg>
       );
@@ -140,10 +134,7 @@ function Icon({
       return (
         <svg {...common}>
           <circle cx="9" cy="8" r="3" {...props} />
-          <path
-            d="M3.5 20c.5-3.2 2.3-5 5.5-5s5 1.8 5.5 5"
-            {...props}
-          />
+          <path d="M3.5 20c.5-3.2 2.3-5 5.5-5s5 1.8 5.5 5" {...props} />
           <path d="M15 5.5a3 3 0 0 1 0 5.8" {...props} />
           <path d="M17 15c2 .5 3.3 2.1 3.5 5" {...props} />
         </svg>
@@ -179,8 +170,6 @@ function Icon({
   }
 }
 
-
-
 function SectionLabel({
   children,
   light = false,
@@ -190,32 +179,172 @@ function SectionLabel({
 }) {
   return (
     <div
-      className={`flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em] ${
+      className={`flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] ${
         light ? "text-[#F59E0B]" : "text-[#F59E0B]"
       }`}
     >
-      <span className="h-[1px] w-7 bg-current" />
+      <span className="h-px w-7 bg-current" />
       {children}
     </div>
   );
 }
 
-
-
 function NumberBadge({ number }: { number: string }) {
   return (
-    <span className="text-[10px] font-bold tracking-[0.16em] text-[#F59E0B]">
+    <span className="text-[11px] font-semibold tracking-[0.12em] text-[#F59E0B]">
       {number}
     </span>
   );
 }
 
+/* =========================================================
+   CORE VALUE CAROUSEL
+========================================================= */
+
+function CoreValueCarousel({ isID }: { isID: boolean }) {
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const coreValues = [
+    {
+      number: "01",
+      title: isID ? "Berorientasi pada Bisnis" : "Business Focused",
+      subtitle: isID
+        ? "Memahami sebelum membangun"
+        : "Understand before building",
+      description: isID
+        ? "Kami memulai setiap proyek dengan memahami kebutuhan, tantangan, dan tujuan bisnis pelanggan agar solusi yang dibangun memberikan manfaat nyata."
+        : "We start every project by understanding our customers' needs, challenges, and business goals to ensure every solution delivers meaningful value.",
+      keywords: ["Business Goals", "Real Needs", "Measurable Impact"],
+    },
+    {
+      number: "02",
+      title: isID ? "Inovasi & Kualitas" : "Innovation & Quality",
+      subtitle: isID
+        ? "Teknologi dengan tujuan"
+        : "Technology with purpose",
+      description: isID
+        ? "Kami menggabungkan kreativitas, teknologi yang tepat, dan proses pengembangan yang terstruktur untuk menghasilkan solusi yang efektif, andal, dan mudah dikembangkan."
+        : "We combine creativity, appropriate technology, and structured development processes to deliver effective, reliable, and scalable solutions.",
+      keywords: ["Innovation", "Reliability", "Scalability"],
+    },
+    {
+      number: "03",
+      title: isID ? "Kolaborasi & Kepercayaan" : "Collaboration & Trust",
+      subtitle: isID
+        ? "Tumbuh bersama pelanggan"
+        : "Growing with our customers",
+      description: isID
+        ? "Kami membangun hubungan jangka panjang melalui komunikasi terbuka, kolaborasi yang erat, dan komitmen untuk terus mendukung perkembangan bisnis pelanggan."
+        : "We build long-term relationships through open communication, close collaboration, and a commitment to supporting our customers' continued growth.",
+      keywords: ["Transparency", "Partnership", "Long-Term Growth"],
+    },
+  ];
+
+  const currentValue = coreValues[activeSlide];
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % 3);
+    }, 5000);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="mt-16 w-full overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-[0_12px_36px_rgba(0,0,0,0.045)] md:mt-20">
+      <div className="grid min-h-[320px] grid-cols-1 md:grid-cols-[0.85fr_1.15fr]">
+        {/* LEFT IMAGE PANEL */}
+        <div className="relative flex min-h-[260px] flex-col justify-end overflow-hidden bg-neutral-900 p-6 text-white sm:p-8 md:min-h-[340px] md:p-10">
+          <img
+            src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1000&q=85"
+            alt={
+              isID
+                ? "Tim profesional berkolaborasi mengembangkan solusi teknologi"
+                : "Professionals collaborating on technology solutions"
+            }
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
+
+          <div className="relative z-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#F59E0B]">
+              {currentValue.number} / 03
+            </p>
+
+            <h3 className="mt-4 font-[var(--font-plus-jakarta)] text-2xl font-bold leading-tight tracking-tight sm:text-3xl">
+              {currentValue.title}
+            </h3>
+
+            <p className="mt-3 text-sm leading-6 text-white/80 md:text-base">
+              {currentValue.subtitle}
+            </p>
+          </div>
+        </div>
+
+        {/* RIGHT CONTENT PANEL */}
+        <div className="flex min-h-[320px] flex-col justify-between p-6 sm:p-8 md:min-h-[340px] md:p-10">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#F59E0B]">
+              {isID ? "Prinsip Kami" : "Our Principles"}
+            </p>
+
+            <p className="mt-5 text-[15px] leading-7 text-neutral-600 sm:text-base sm:leading-8">
+              {currentValue.description}
+            </p>
+
+            <div className="mt-6 flex flex-wrap gap-2">
+              {currentValue.keywords.map((keyword) => (
+                <span
+                  key={keyword}
+                  className="rounded-full border border-neutral-200 bg-neutral-50 px-3 py-2 text-xs font-medium text-neutral-600"
+                >
+                  {keyword}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* INDICATORS — LEFT ALIGNED */}
+          <div className="mt-8 border-t border-neutral-100 pt-5">
+            <div
+              className="flex items-center justify-start gap-2"
+              role="group"
+              aria-label={isID ? "Navigasi nilai inti" : "Core values navigation"}
+            >
+              {coreValues.map((value, index) => (
+                <button
+                  key={value.number}
+                  type="button"
+                  onClick={() => setActiveSlide(index)}
+                  aria-label={
+                    isID
+                      ? `Buka slide nilai inti ${index + 1}`
+                      : `Go to core value slide ${index + 1}`
+                  }
+                  aria-current={activeSlide === index ? "step" : undefined}
+                  className={`h-2 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2 ${
+                    activeSlide === index
+                      ? "w-8 bg-[#F59E0B]"
+                      : "w-2 bg-neutral-300 hover:bg-neutral-400"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
+   ABOUT CONTENT
+========================================================= */
 
 function AboutContent() {
   const { language } = useLanguage();
   const isID = language === "ID";
-
-
 
   const services = [
     {
@@ -231,7 +360,7 @@ function AboutContent() {
       icon: "layers" as IconName,
       title: "Custom Software",
       description: isID
-        ? "Sistem khusus yang menyesuaikan workflow, proses, dan kebutuhan operasional perusahaan."
+        ? "Sistem khusus yang menyesuaikan alur kerja, proses, dan kebutuhan operasional perusahaan."
         : "Custom systems tailored to your company's workflows, processes, and operational needs.",
     },
     {
@@ -243,7 +372,6 @@ function AboutContent() {
         : "A technology partner that helps plan, build, and continuously evolve your digital solutions.",
     },
   ];
-
 
   const values = [
     {
@@ -275,11 +403,10 @@ function AboutContent() {
       icon: "shield" as IconName,
       title: "Long-Term Partnership",
       text: isID
-        ? "Kami ingin menjadi partner jangka panjang, bukan hanya vendor dalam satu project."
+        ? "Kami ingin menjadi partner jangka panjang, bukan hanya vendor dalam satu proyek."
         : "We aim to become a long-term partner, not simply a vendor for one project.",
     },
   ];
-
 
   const approach = [
     {
@@ -317,324 +444,328 @@ function AboutContent() {
   ];
 
   return (
-    <main className="min-h-screen bg-white text-[#171717]">
+    <main className="min-h-screen bg-white font-[var(--font-inter)] text-neutral-900">
       <NavbarMain />
-<section className="relative overflow-hidden bg-[#B9470B] text-white">
-  {/* Decorative circles */}
-  <div className="pointer-events-none absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full border-[80px] border-white/[0.045]" />
 
-  <div className="pointer-events-none absolute -bottom-48 left-[38%] h-[500px] w-[500px] rounded-full border-[70px] border-white/[0.035]" />
+      {/* =====================================================
+          HERO
+      ===================================================== */}
+      <section className="relative overflow-hidden bg-[#B9470B] text-white">
+        <div className="pointer-events-none absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full border-[80px] border-white/[0.045]" />
 
-  {/* Hero grid */}
-  <div className="relative mx-auto grid min-h-[650px] max-w-[1280px] grid-cols-1 lg:grid-cols-[1fr_1fr]">
+        <div className="pointer-events-none absolute -bottom-48 left-[38%] h-[500px] w-[500px] rounded-full border-[70px] border-white/[0.035]" />
 
+        <div className="relative mx-auto grid min-h-[600px] max-w-[1280px] grid-cols-1 lg:grid-cols-[1fr_1fr] xl:min-h-[650px]">
+          {/* LEFT */}
+          <div className="relative z-10 flex flex-col justify-center px-6 py-16 sm:px-10 lg:px-12 lg:py-20 xl:px-16">
+            <div className="mb-8 flex items-center gap-3">
+              <span className="h-px w-8 bg-[#F59E0B]" />
 
-    <div className="relative z-10 flex flex-col justify-center px-6 py-16 sm:px-10 lg:px-14 lg:py-20 xl:px-16">
-
-      {/* Breadcrumb / Page label */}
-      <div className="mb-9 flex items-center gap-3">
-        <span className="h-[2px] w-8 bg-[#F59E0B]" />
-
-        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60">
-          IFTECH SOLUSINDO
-        </span>
-
-        <span className="text-white/25">/</span>
-
-        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/85">
-          {isID ? "Tentang Kami" : "About Us"}
-        </span>
-      </div>
-
-      {/* Heading */}
-      <div className="max-w-[680px]">
-
-        {/* <p className="mb-4 text-[15px] font-semibold uppercase tracking-[0.12em] text-[#FBBF24] md:text-[17px]">
-          {isID ? "Tentang Kami" : "About Us"}
-        </p> */}
-
-        <h1 className="text-[48px] font-bold leading-[0.98] tracking-[-0.045em] sm:text-[58px] md:text-[68px] xl:text-[74px]">
-          {isID ? (
-            <>
-              Mengenal
-              <br />
-              <span className="text-white/75">
-                IFTECH SOLUSINDO.
+              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/65">
+                IFTECH SOLUSINDO
               </span>
-            </>
-          ) : (
-            <>
-              About
-              <br />
-              <span className="text-white/75">
-                IFTECH SOLUSINDO.
+
+              <span className="text-white/30">/</span>
+
+              <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/85">
+                {isID ? "Tentang Kami" : "About Us"}
               </span>
-            </>
-          )}
-        </h1>
-      </div>
+            </div>
 
-      {/* Description */}
-      <p className="mt-8 max-w-[570px] text-[14px] font-normal leading-7 text-white/65 md:text-[15px]">
-        {isID
-          ? "Kami adalah perusahaan teknologi yang membantu bisnis membangun solusi digital yang relevan, terukur, dan dapat berkembang bersama kebutuhan mereka."
-          : "We are a technology company helping businesses build relevant, measurable, and scalable digital solutions that grow with their needs."}
-      </p>
+            <div className="max-w-[650px]">
+              <h1 className="font-[var(--font-plus-jakarta)] text-[42px] font-bold leading-[1.08] tracking-[-0.045em] sm:text-[54px] md:text-[62px] xl:text-[70px]">
+                {isID ? (
+                  <>
+                    Mengenal
+                    <br />
+                    <span className="text-white/75">IFTECH SOLUSINDO.</span>
+                  </>
+                ) : (
+                  <>
+                    About
+                    <br />
+                    <span className="text-white/75">IFTECH SOLUSINDO.</span>
+                  </>
+                )}
+              </h1>
+            </div>
 
-    
-      <div className="mt-11 flex flex-wrap items-center">
+            <p className="mt-7 max-w-[550px] text-[15px] leading-7 text-white/75 md:text-base md:leading-8">
+              {isID
+                ? "Kami adalah perusahaan teknologi yang membantu bisnis membangun solusi digital yang relevan, terukur, dan dapat berkembang bersama kebutuhan mereka."
+                : "We are a technology company helping businesses build relevant, measurable, and scalable digital solutions that grow with their needs."}
+            </p>
 
-        {/* 01 */}
-        <div className="pr-7">
-          <p className="text-[22px] font-bold leading-none tracking-[-0.03em] text-white">
-            01
-          </p>
+            <div className="mt-10 flex flex-wrap items-center gap-y-5">
+              <div className="pr-5 sm:pr-7">
+                <p className="font-[var(--font-plus-jakarta)] text-2xl font-bold leading-none tracking-tight">
+                  01
+                </p>
+                <p className="mt-2 text-[10px] font-medium uppercase leading-4 tracking-[0.12em] text-white/60">
+                  Business First
+                </p>
+              </div>
 
-          <p className="mt-2 text-[8px] font-semibold uppercase leading-none tracking-[0.16em] text-white/45">
-            Business First
-          </p>
+              <div className="h-9 w-px bg-white/20" />
+
+              <div className="px-5 sm:px-7">
+                <p className="font-[var(--font-plus-jakarta)] text-2xl font-bold leading-none tracking-tight">
+                  02
+                </p>
+                <p className="mt-2 text-[10px] font-medium uppercase leading-4 tracking-[0.12em] text-white/60">
+                  Digital Solution
+                </p>
+              </div>
+
+              <div className="h-9 w-px bg-white/20" />
+
+              <div className="pl-5 sm:pl-7">
+                <p className="font-[var(--font-plus-jakarta)] text-2xl font-bold leading-none tracking-tight">
+                  03
+                </p>
+                <p className="mt-2 text-[10px] font-medium uppercase leading-4 tracking-[0.12em] text-white/60">
+                  Long Term
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT — HERO IMAGE */}
+          <div className="relative min-h-[320px] overflow-hidden sm:min-h-[400px] lg:mr-[calc((100vw-1280px)/-2)] lg:min-h-[600px] xl:min-h-[650px]">
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage:
+                  "url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=85')",
+              }}
+            />
+
+            <div className="absolute inset-0 bg-black/25" />
+
+            <div className="absolute inset-y-0 left-0 w-[65%] bg-gradient-to-r from-[#B9470B] via-[#B9470B]/80 to-transparent" />
+
+            <div className="absolute inset-y-0 left-0 w-[38%] bg-gradient-to-r from-[#B9470B] to-transparent" />
+
+            <div className="absolute inset-x-0 bottom-0 h-[28%] bg-gradient-to-t from-[#B9470B]/35 to-transparent" />
+          </div>
         </div>
+      </section>
 
-        {/* Divider */}
-        <div className="h-8 w-px bg-white/20" />
-
-        {/* 02 */}
-        <div className="px-7">
-          <p className="text-[22px] font-bold leading-none tracking-[-0.03em] text-white">
-            02
-          </p>
-
-          <p className="mt-2 text-[8px] font-semibold uppercase leading-none tracking-[0.16em] text-white/45">
-            Digital Solution
-          </p>
-        </div>
-
-        {/* Divider */}
-        <div className="h-8 w-px bg-white/20" />
-
-        {/* 03 */}
-        <div className="pl-7">
-          <p className="text-[22px] font-bold leading-none tracking-[-0.03em] text-white">
-            03
-          </p>
-
-          <p className="mt-2 text-[8px] font-semibold uppercase leading-none tracking-[0.16em] text-white/45">
-            Long Term
-          </p>
-        </div>
-      </div>
-    </div>
-
-  
-    <div
-      className="
-        relative
-        min-h-[380px]
-        overflow-hidden
-        lg:min-h-[650px]
-        lg:mr-[calc((100vw-1280px)/-2)]
-      "
-    >
-      {/* Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=85')",
-        }}
-      />
-
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/25" />
-
-      {/* Orange transition */}
-      <div
-        className="
-          absolute
-          inset-y-0
-          left-0
-          w-[65%]
-          bg-gradient-to-r
-          from-[#B9470B]
-          via-[#B9470B]/80
-          to-transparent
-        "
-      />
-
-      {/* Soft transition */}
-      <div
-        className="
-          absolute
-          inset-y-0
-          left-0
-          w-[38%]
-          bg-gradient-to-r
-          from-[#B9470B]
-          to-transparent
-        "
-      />
-
-      {/* Bottom fade */}
-      <div
-        className="
-          absolute
-          inset-x-0
-          bottom-0
-          h-[28%]
-          bg-gradient-to-t
-          from-[#B9470B]/35
-          to-transparent
-        "
-      />
-
-      {/* Image label */}
-      <div className="absolute bottom-8 right-8 hidden md:flex items-center gap-3">
-        <span className="h-px w-8 bg-white/40" />
-
-        <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-white/60">
-          About IFTECH
-        </span>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
-      <section className="relative z-20 mx-auto -mt-10 max-w-[1120px] px-5">
-        <div className="overflow-hidden rounded-[24px] border border-gray-100 bg-white shadow-[0_20px_60px_rgba(0,0,0,0.10)]">
+      {/* =====================================================
+          QUICK PROCESS CARD
+      ===================================================== */}
+      <section className="relative z-20 mx-auto -mt-8 max-w-[1120px] px-5 sm:-mt-10">
+        <div className="overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-[0_16px_45px_rgba(0,0,0,0.07)]">
           <div className="grid grid-cols-1 md:grid-cols-3">
             {[
               {
-                number: "01",
                 icon: "search" as IconName,
-                title: isID
-                  ? "Memahami Kebutuhan"
-                  : "Understanding Needs",
+                title: isID ? "Memahami Kebutuhan" : "Understanding Needs",
                 text: isID
                   ? "Memahami masalah dan tujuan bisnis."
                   : "Understanding the business problem and goals.",
               },
               {
-                number: "02",
                 icon: "design" as IconName,
-                title: isID
-                  ? "Merancang Solusi"
-                  : "Designing Solutions",
+                title: isID ? "Merancang Solusi" : "Designing Solutions",
                 text: isID
                   ? "Menyusun solusi yang tepat dan terukur."
                   : "Creating the right and measurable solution.",
               },
               {
-                number: "03",
                 icon: "rocket" as IconName,
-                title: isID
-                  ? "Membangun & Berkembang"
-                  : "Build & Grow",
+                title: isID ? "Membangun & Berkembang" : "Build & Grow",
                 text: isID
                   ? "Membangun dan mengembangkan solusi."
                   : "Building and continuously improving the solution.",
               },
             ].map((item, index) => (
               <div
-                key={item.number}
-                className={`group relative p-7 md:p-9 ${
+                key={item.title}
+                className={`group px-6 py-7 sm:px-8 md:py-9 ${
                   index !== 2
-                    ? "border-b border-gray-100 md:border-b-0 md:border-r"
+                    ? "border-b border-neutral-100 md:border-b-0 md:border-r"
                     : ""
                 }`}
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF4E1] text-[#F59E0B] transition-all duration-300 group-hover:bg-[#F59E0B] group-hover:text-white">
-                    <Icon name={item.icon} size={21} />
+                <div className="flex justify-center">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 text-[#F59E0B] transition-colors duration-300 group-hover:bg-[#F59E0B] group-hover:text-white">
+                    <Icon name={item.icon} size={25} strokeWidth={1.7} />
                   </div>
-
-                  <NumberBadge number={item.number} />
                 </div>
 
-                <h3 className="mt-8 text-[17px] font-bold">
-                  {item.title}
-                </h3>
+                <div className="mt-5 text-center">
+                  <h3 className="font-[var(--font-plus-jakarta)] text-base font-semibold tracking-tight text-neutral-900 sm:text-[17px]">
+                    {item.title}
+                  </h3>
 
-                <p className="mt-2 text-[12px] leading-6 text-gray-500">
-                  {item.text}
-                </p>
+                  <p className="mx-auto mt-2 max-w-[270px] text-sm leading-6 text-neutral-500">
+                    {item.text}
+                  </p>
+                </div>
+
+                <div className="mx-auto mt-5 h-0.5 w-7 bg-[#F59E0B]/70 transition-all duration-300 group-hover:w-11" />
               </div>
             ))}
           </div>
         </div>
       </section>
 
-
-
-      <section id="company" className="py-28 md:py-36">
+      {/* =====================================================
+          ABOUT / CORE VALUE / MISSION & VISION
+      ===================================================== */}
+      <section className="bg-white py-20 md:py-24">
         <div className="mx-auto max-w-[1180px] px-6 md:px-10">
-          <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:gap-24">
-            {/* LEFT */}
+          {/* STATEMENT */}
+          <div className="mx-auto max-w-[850px] text-center">
+            <p className="text-[17px] font-normal leading-8 text-neutral-700 sm:text-lg sm:leading-9 md:text-xl">
+              {isID ? (
+                <>
+                  Kami menghadirkan solusi inovatif melalui{" "}
+                  <span className="font-semibold text-[#F59E0B]">
+                    Application, Digital Service, Mobile, AI, dan Security
+                  </span>{" "}
+                  untuk membantu bisnis berkembang di dunia yang terus
+                  berubah.
+                </>
+              ) : (
+                <>
+                  We deliver innovative solutions around{" "}
+                  <span className="font-semibold text-[#F59E0B]">
+                    Application, Digital Service, Mobile, AI, and Security
+                  </span>{" "}
+                  to help businesses thrive in a dynamic world.
+                </>
+              )}
+            </p>
 
+            <p className="mt-5 text-[17px] font-normal leading-8 text-neutral-700 sm:text-lg sm:leading-9 md:text-xl">
+              {isID ? (
+                <>
+                  Kami menyediakan layanan teknologi untuk berbagai industri
+                  di Indonesia, termasuk{" "}
+                  <span className="font-semibold text-[#F59E0B]">
+                    Institusi, Telekomunikasi & Service
+                    Provider, Perusahaan Besar, dan BUMN.
+                  </span>
+                </>
+              ) : (
+                <>
+                  We deliver IT technology services for customers across
+                  industries in Indonesia, including{" "}
+                  <span className="font-semibold text-[#F59E0B]">
+                    Banking & Financial Institutions, Telecommunication &
+                    Service Providers, Big Enterprises, and State-Owned
+                    Companies.
+                  </span>
+                </>
+              )}
+            </p>
+          </div>
+
+          {/* CORE VALUE */}
+          <CoreValueCarousel isID={isID} />
+
+          {/* MISSION & VISION */}
+          <div className="mt-5 grid grid-cols-1 items-stretch gap-5 md:grid-cols-2">
+            <div className="flex flex-col rounded-2xl border border-neutral-200 bg-neutral-50 p-6 transition-colors duration-300 hover:bg-white sm:p-8">
+              <h3 className="mt-2 font-[var(--font-plus-jakarta)] text-2xl font-bold tracking-tight text-neutral-900">
+                {isID ? "Misi Kami" : "Our Mission"}
+              </h3>
+
+              <p className="mt-4 text-sm leading-7 text-neutral-600 sm:text-[15px] sm:leading-8">
+                {isID
+                  ? "Menghadirkan solusi teknologi yang inovatif, andal, dan tepat guna dengan memahami kebutuhan bisnis, membangun kemitraan yang kuat, serta membantu pelanggan meningkatkan efisiensi dan mencapai tujuan mereka."
+                  : "To deliver innovative, reliable, and effective technology solutions by understanding business needs, building strong partnerships, and helping customers improve efficiency and achieve their goals."}
+              </p>
+
+              <div className="mt-auto pt-7">
+                <div className="h-1 w-10 rounded-full bg-[#F59E0B]" />
+              </div>
+            </div>
+
+            <div className="flex flex-col rounded-2xl bg-neutral-900 p-6 text-white transition-colors duration-300 hover:bg-neutral-800 sm:p-8">
+              <h3 className="mt-2 font-[var(--font-plus-jakarta)] text-2xl font-bold tracking-tight">
+                {isID ? "Visi Kami" : "Our Vision"}
+              </h3>
+
+              <p className="mt-4 text-sm leading-7 text-white/75 sm:text-[15px] sm:leading-8">
+                {isID
+                  ? "Menjadi mitra teknologi terpercaya yang mendorong transformasi digital dan menciptakan dampak positif bagi bisnis serta masyarakat melalui solusi teknologi yang berkelanjutan."
+                  : "To become a trusted technology partner that drives digital transformation and creates a positive impact on businesses and society through sustainable technology solutions."}
+              </p>
+
+              <div className="mt-auto pt-7">
+                <div className="h-1 w-10 rounded-full bg-[#F59E0B]" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================
+          COMPANY
+      ===================================================== */}
+      <section id="company" className="py-20 md:py-24">
+        <div className="mx-auto max-w-[1180px] px-6 md:px-10">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-4">
               <SectionLabel>
                 {isID ? "Perusahaan Kami" : "Our Company"}
               </SectionLabel>
 
-              <h2 className="mt-6 text-[40px] font-bold leading-[1.05] tracking-[-0.04em] md:text-[50px]">
+              <h2 className="mt-5 font-[var(--font-plus-jakarta)] text-3xl font-bold leading-tight tracking-tight sm:text-4xl md:text-[44px]">
                 {isID
-                  ? "Lebih dari sekadar software house."
-                  : "More than just a software house."}
+                  ? "Lebih dari sekadar solusi masa depan Anda."
+                  : "More than just a solution for your future."}
               </h2>
 
-              <div className="mt-8 hidden h-px w-20 bg-[#D90812] lg:block" />
+              <div className="mt-7 hidden h-px w-20 bg-[#F59E0B] lg:block" />
             </div>
 
-            {/* RIGHT */}
-
             <div className="lg:col-span-8">
-              <p className="max-w-[760px] text-[20px] font-medium leading-8 text-[#303030] md:text-[24px] md:leading-9">
+              <p className="max-w-[760px] font-[var(--font-plus-jakarta)] text-lg font-semibold leading-8 tracking-tight text-neutral-800 sm:text-xl md:text-2xl md:leading-9">
                 {isID
                   ? "Kami membantu perusahaan menerjemahkan kebutuhan bisnis menjadi solusi teknologi yang dapat digunakan, diukur, dan dikembangkan."
                   : "We help businesses translate their needs into technology solutions that can be used, measured, and scaled."}
               </p>
 
-              <p className="mt-7 max-w-[700px] text-[14px] leading-7 text-gray-500">
+              <p className="mt-5 max-w-[700px] text-sm leading-7 text-neutral-600 sm:text-[15px] sm:leading-8">
                 {isID
                   ? "Mulai dari website, aplikasi, hingga custom software, kami menggabungkan pemahaman terhadap bisnis dengan proses pengembangan yang terstruktur. Setiap solusi dirancang untuk menjawab kebutuhan nyata, bukan sekadar mengikuti tren teknologi."
                   : "From websites and applications to custom software, we combine business understanding with a structured development process. Every solution is designed to solve real needs rather than simply follow technology trends."}
               </p>
 
-              <div className="mt-12 grid grid-cols-2 border-y border-gray-200 md:grid-cols-4">
+              <div className="mt-9 grid grid-cols-2 border-y border-neutral-200 md:grid-cols-4">
                 {[
-                  {
-                    number: "01",
-                    title: "Business Focused",
-                  },
-                  {
-                    number: "02",
-                    title: "Digital Solution",
-                  },
-                  {
-                    number: "03",
-                    title: "Structured Process",
-                  },
-                  {
-                    number: "04",
-                    title: "Long Term",
-                  },
+                  { number: "01", title: "Business Focused" },
+                  { number: "02", title: "Digital Solution" },
+                  { number: "03", title: "Structured Process" },
+                  { number: "04", title: "Long Term" },
                 ].map((item, index) => (
                   <div
                     key={item.number}
-                    className={`px-5 py-7 ${
-                      index !== 3 ? "border-r border-gray-200" : ""
+                    className={`px-4 py-5 sm:px-5 sm:py-6 ${
+                      index % 2 === 0 ? "border-r border-neutral-200" : ""
                     } ${
                       index > 1
-                        ? "border-t md:border-t-0"
+                        ? "border-t border-neutral-200 md:border-t-0"
+                        : ""
+                    } ${
+                      index === 1
+                        ? "md:border-r md:border-neutral-200"
+                        : ""
+                    } ${
+                      index === 2
+                        ? "md:border-r md:border-neutral-200"
                         : ""
                     }`}
                   >
-                    <p className="text-[27px] font-bold tracking-[-0.04em]">
+                    <p className="font-[var(--font-plus-jakarta)] text-2xl font-bold tracking-tight sm:text-[27px]">
                       {item.number}
                     </p>
 
-                    <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.12em] text-gray-400">
+                    <p className="mt-2 text-[10px] font-semibold uppercase leading-5 tracking-[0.08em] text-neutral-500 sm:text-[11px]">
                       {item.title}
                     </p>
                   </div>
@@ -645,312 +776,58 @@ function AboutContent() {
         </div>
       </section>
 
+     
 
-      <section className="bg-[#F7F7F6] py-28 md:py-36">
+      {/* =====================================================
+          OUR VALUES — DARK
+      ===================================================== */}
+      <section className="bg-neutral-900 py-20 text-white md:py-24">
         <div className="mx-auto max-w-[1180px] px-6 md:px-10">
-          {/* STATEMENT */}
-
-          <div className="mx-auto max-w-[850px] text-center">
-            <SectionLabel>
-              {isID ? "Tentang IFTECH" : "About IFTECH"}
-            </SectionLabel>
-
-            <div className="mt-8">
-              <p className="text-[18px] font-medium leading-8 tracking-[-0.015em] text-[#171717] md:text-[21px] md:leading-9">
-                {isID ? (
-                  <>
-                    Kami menghadirkan solusi inovatif melalui{" "}
-                    <span className="font-semibold text-[#D90812]">
-                      Application, Digital Service, Mobile, AI, dan Security
-                    </span>{" "}
-                    untuk membantu bisnis berkembang di dunia yang terus
-                    berubah.
-                  </>
-                ) : (
-                  <>
-                    We deliver innovative solutions around{" "}
-                    <span className="font-semibold text-[#D90812]">
-                      Application, Digital Service, Mobile, AI, and Security
-                    </span>{" "}
-                    to help businesses thrive in a dynamic world.
-                  </>
-                )}
-              </p>
-
-              <p className="mt-7 text-[18px] font-medium leading-8 tracking-[-0.015em] text-[#171717] md:text-[21px] md:leading-9">
-                {isID ? (
-                  <>
-                    Kami menyediakan layanan teknologi untuk berbagai industri
-                    di Indonesia, termasuk{" "}
-                    <span className="font-semibold text-[#D90812]">
-                      Perbankan & Institusi Keuangan, Telekomunikasi &
-                      Service Provider, Perusahaan Besar, dan BUMN.
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    We deliver IT technology services for customers across
-                    industries in Indonesia, including{" "}
-                    <span className="font-semibold text-[#D90812]">
-                      Banking & Financial Institutions, Telecommunication &
-                      Service Providers, Big Enterprises, and State-Owned
-                      Companies.
-                    </span>
-                  </>
-                )}
-              </p>
-            </div>
-          </div>
-
-          {/* CORE VALUE */}
-
-          <div className="mt-20 overflow-hidden rounded-[24px] border border-gray-200 bg-white shadow-[0_15px_50px_rgba(0,0,0,0.05)]">
-            <div className="grid min-h-[350px] grid-cols-1 md:grid-cols-[280px_1fr]">
-              {/* LEFT DARK PANEL */}
-
-              <div className="relative overflow-hidden bg-[#171717] p-8 text-white md:p-10">
-                <div className="pointer-events-none absolute -bottom-28 -left-24 h-64 w-64 rounded-full border-[45px] border-white/[0.035]" />
-
-                <div className="relative flex h-full flex-col justify-between">
-                  <div>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#F59E0B]">
-                      {isID ? "Nilai Inti" : "Core Value"}
-                    </span>
-
-                    <div className="mt-8 flex h-12 w-12 items-center justify-center rounded-xl bg-[#D90812]">
-                      <Icon name="spark" size={22} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-white/35">
-                      IFTECH SOLUSINDO
-                    </p>
-
-                    <p className="mt-2 max-w-[190px] text-[11px] leading-5 text-white/50">
-                      {isID
-                        ? "Prinsip yang menjadi dasar setiap solusi yang kami bangun."
-                        : "The principles behind every solution we build."}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* RIGHT CONTENT */}
-
-              <div className="relative flex flex-col justify-center p-8 md:p-12 lg:p-14">
-                <div className="pointer-events-none absolute right-8 top-6 text-[90px] font-bold leading-none text-gray-100 md:right-12 md:top-8 md:text-[120px]">
-                  01
-                </div>
-
-                <div className="relative max-w-[700px]">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-gray-400">
-                    Core Value
-                  </span>
-
-                  <h3 className="mt-3 text-[30px] font-bold tracking-[-0.035em] md:text-[38px]">
-                    Service Excellence
-                  </h3>
-
-                  <p className="mt-5 max-w-[650px] text-[13px] leading-7 text-gray-500 md:text-[14px]">
-                    {isID
-                      ? "Kami memberikan kualitas layanan terbaik melalui solusi yang disesuaikan dengan kebutuhan, profesionalisme, dan keandalan, dengan komitmen untuk selalu melampaui ekspektasi pelanggan."
-                      : "We deliver exceptional quality through tailored solutions, professionalism, and reliability — consistently exceeding client expectations."}
-                  </p>
-
-                  <div className="mt-10 flex items-center gap-2">
-                    <span className="h-[3px] w-3 rounded-full bg-gray-200" />
-                    <span className="h-[3px] w-7 rounded-full bg-[#D90812]" />
-                    <span className="h-[3px] w-3 rounded-full bg-gray-200" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* MISSION & VISION */}
-
-          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-            {/* MISSION */}
-
-            <div className="group rounded-[22px] border border-gray-200 bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:border-gray-300 hover:shadow-[0_18px_45px_rgba(0,0,0,0.07)] md:p-10">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#F59E0B]">
-                  {isID ? "Misi" : "Mission"}
-                </span>
-
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#FFF4E1] text-[#F59E0B] transition-all duration-300 group-hover:bg-[#F59E0B] group-hover:text-white">
-                  <Icon name="target" size={19} />
-                </div>
-              </div>
-
-              <h3 className="mt-8 text-[25px] font-bold tracking-[-0.03em]">
-                {isID ? "Misi" : "Mission"}
-              </h3>
-
-              <p className="mt-4 text-[13px] leading-6 text-gray-500">
-                {isID
-                  ? "Menjadi partner pilihan dengan memberikan layanan berkualitas tinggi yang selaras dengan kebutuhan bisnis dan perkembangan industri, menggunakan teknologi yang tepat untuk menghasilkan solusi terbaik."
-                  : "Become the preferred partner by delivering high-quality services that align with business needs and industry trends, using the right technology to provide the best solutions."}
-              </p>
-            </div>
-
-            {/* VISION */}
-
-            <div className="group rounded-[22px] border border-gray-200 bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:border-gray-300 hover:shadow-[0_18px_45px_rgba(0,0,0,0.07)] md:p-10">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#F59E0B]">
-                  {isID ? "Visi" : "Vision"}
-                </span>
-
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#FFF4E1] text-[#F59E0B] transition-all duration-300 group-hover:bg-[#F59E0B] group-hover:text-white">
-                  <Icon name="chart" size={19} />
-                </div>
-              </div>
-
-              <h3 className="mt-8 text-[25px] font-bold tracking-[-0.03em]">
-                {isID ? "Visi" : "Vision"}
-              </h3>
-
-              <p className="mt-4 text-[13px] leading-6 text-gray-500">
-                {isID
-                  ? "Memberikan integrasi solusi yang berfokus pada kemajuan, keberlanjutan, dan inovasi untuk menciptakan keunggulan kompetitif serta menjadi partner teknologi terpercaya bagi pelanggan secara lokal maupun regional."
-                  : "Deliver solution integration focused on advancement, sustainability, and innovation to create competitive advantage and become a trusted technology partner for customers locally and regionally."}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-
-      <section className="bg-white py-28 md:py-36">
-        <div className="mx-auto max-w-[1180px] px-6 md:px-10">
-          <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-            <div className="max-w-[700px]">
-              <SectionLabel>
-                {isID ? "Apa yang Kami Lakukan" : "What We Do"}
-              </SectionLabel>
-
-              <h2 className="mt-6 text-[40px] font-bold leading-[1.04] tracking-[-0.04em] md:text-[52px]">
-                {isID
-                  ? "Mengubah kebutuhan menjadi solusi digital."
-                  : "Turning business needs into digital solutions."}
-              </h2>
-            </div>
-
-            <p className="max-w-[330px] text-[13px] leading-6 text-gray-500">
-              {isID
-                ? "Dari ide hingga implementasi, kami membantu membangun solusi yang relevan dengan bisnis Anda."
-                : "From idea to implementation, we help build solutions that are relevant to your business."}
-            </p>
-          </div>
-
-          {/* Service cards */}
-
-          <div className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-3">
-            {services.map((item) => (
-              <div
-                key={item.number}
-                className="group relative min-h-[390px] overflow-hidden rounded-[22px] border border-gray-200 bg-[#FAFAFA] p-8 transition-all duration-300 hover:-translate-y-2 hover:border-gray-300 hover:bg-white hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] md:p-10"
-              >
-                {/* Top */}
-
-                <div className="relative z-10 flex items-center justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF4E1] text-[#F59E0B] transition-all duration-300 group-hover:bg-[#F59E0B] group-hover:text-white">
-                    <Icon name={item.icon} size={22} />
-                  </div>
-
-                  <NumberBadge number={item.number} />
-                </div>
-
-                {/* Content */}
-
-                <div className="absolute bottom-9 left-8 right-8 z-10 md:left-10 md:right-10">
-                  <h3 className="text-[23px] font-bold tracking-[-0.025em]">
-                    {item.title}
-                  </h3>
-
-                  <p className="mt-4 text-[13px] leading-6 text-gray-500">
-                    {item.description}
-                  </p>
-
-                  <div className="mt-7 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#D90812]">
-                    {isID ? "Pelajari lebih lanjut" : "Learn more"}
-
-                    <span className="transition-transform duration-300 group-hover:translate-x-1">
-                      <Icon name="arrow" size={15} />
-                    </span>
-                  </div>
-                </div>
-
-                {/* Background number */}
-
-                <span className="pointer-events-none absolute -bottom-12 -right-5 text-[130px] font-bold leading-none text-gray-100 transition-transform duration-500 group-hover:translate-x-2">
-                  {item.number}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
-      <section className="bg-[#F7F7F6] py-28 md:py-36">
-        <div className="mx-auto max-w-[1180px] px-6 md:px-10">
-          <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:gap-24">
-            {/* LEFT */}
-
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-5">
               <SectionLabel>
                 {isID ? "Nilai Kami" : "Our Values"}
               </SectionLabel>
 
-              <h2 className="mt-6 text-[40px] font-bold leading-[1.04] tracking-[-0.04em] md:text-[54px]">
+              <h2 className="mt-5 font-[var(--font-plus-jakarta)] text-3xl font-bold leading-tight tracking-tight sm:text-4xl md:text-[48px]">
                 {isID
                   ? "Cara kami berpikir dan bekerja."
                   : "How we think and work."}
               </h2>
 
-              <p className="mt-7 max-w-[440px] text-[14px] leading-7 text-gray-500">
+              <p className="mt-5 max-w-[440px] text-sm leading-7 text-white/65 sm:text-[15px] sm:leading-8">
                 {isID
-                  ? "Teknologi yang baik lahir dari proses yang baik. Prinsip ini menjadi dasar dalam setiap project yang kami kerjakan."
+                  ? "Teknologi yang baik lahir dari proses yang baik. Prinsip ini menjadi dasar dalam setiap proyek yang kami kerjakan."
                   : "Great technology comes from a great process. These principles guide every project we work on."}
               </p>
 
-              <div className="mt-10 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
-                <span className="h-2 w-2 rounded-full bg-[#D90812]" />
+              <div className="mt-8 flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.12em] text-white/45">
+                <span className="h-2 w-2 rounded-full bg-[#F59E0B]" />
                 IFTECH SOLUSINDO
               </div>
             </div>
 
-            {/* RIGHT */}
-
             <div className="lg:col-span-7">
-              <div className="divide-y divide-gray-200 border-y border-gray-200">
+              <div className="divide-y divide-white/10 border-y border-white/10">
                 {values.map((item) => (
                   <div
                     key={item.number}
-                    className="group flex gap-5 py-7 md:gap-8 md:py-8"
+                    className="group flex gap-5 py-6 sm:gap-7 md:py-7"
                   >
-                    {/* Icon */}
-
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-gray-400 transition-all duration-300 group-hover:bg-[#FFF4E1] group-hover:text-[#F59E0B]">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/[0.06] text-white/65 transition-colors duration-300 group-hover:bg-orange-50 group-hover:text-[#F59E0B]">
                       <Icon name={item.icon} size={19} />
                     </div>
 
-                    {/* Content */}
-
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between gap-5">
-                        <h3 className="text-[18px] font-bold md:text-[20px]">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-start justify-between gap-4">
+                        <h3 className="font-[var(--font-plus-jakarta)] text-base font-semibold leading-6 sm:text-lg md:text-xl">
                           {item.title}
                         </h3>
 
                         <NumberBadge number={item.number} />
                       </div>
 
-                      <p className="mt-2 max-w-[500px] text-[13px] leading-6 text-gray-500">
+                      <p className="mt-2 max-w-[500px] text-sm leading-7 text-white/60">
                         {item.text}
                       </p>
                     </div>
@@ -961,98 +838,79 @@ function AboutContent() {
           </div>
         </div>
       </section>
-
-
-      <section
-        id="approach"
-        className="relative overflow-hidden bg-[#171717] py-28 text-white md:py-36"
-      >
-        {/* Background decoration */}
-
-        <div className="pointer-events-none absolute right-[-150px] top-[-180px] h-[450px] w-[450px] rounded-full border-[80px] border-white/[0.035]" />
-
-        <div className="pointer-events-none absolute bottom-[-200px] left-[-100px] h-[400px] w-[400px] rounded-full border-[70px] border-[#D90812]/10" />
-
-        <div className="relative mx-auto max-w-[1180px] px-6 md:px-10">
-          <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:gap-24">
-            {/* LEFT */}
-
-            <div className="lg:col-span-5">
-              <SectionLabel light>
-                {isID ? "Pendekatan Kami" : "Our Approach"}
+       {/* =====================================================
+          WHAT WE DO
+      ===================================================== */}
+      <section className="bg-white py-20 md:py-24">
+        <div className="mx-auto max-w-[1180px] px-6 md:px-10">
+          <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div className="max-w-[700px]">
+              <SectionLabel>
+                {isID ? "Apa yang Kami Lakukan" : "What We Do"}
               </SectionLabel>
 
-              <h2 className="mt-6 text-[40px] font-bold leading-[1.04] tracking-[-0.04em] md:text-[54px]">
+              <h2 className="mt-5 font-[var(--font-plus-jakarta)] text-3xl font-bold leading-tight tracking-tight sm:text-4xl md:text-[48px]">
                 {isID
-                  ? "Terstruktur. Kolaboratif. Terukur."
-                  : "Structured. Collaborative. Measurable."}
+                  ? "Mengubah kebutuhan menjadi solusi digital."
+                  : "Turning business needs into digital solutions."}
               </h2>
-
-              <p className="mt-7 max-w-[420px] text-[14px] leading-7 text-white/50">
-                {isID
-                  ? "Setiap project dimulai dari pemahaman masalah yang jelas, kemudian diterjemahkan menjadi solusi yang dapat dikembangkan."
-                  : "Every project starts with a clear understanding of the problem and turns it into a solution designed to evolve."}
-              </p>
             </div>
 
-            {/* RIGHT */}
+            <p className="max-w-[350px] text-sm leading-7 text-neutral-600 sm:text-[15px]">
+              {isID
+                ? "Dari ide hingga implementasi, kami membantu membangun solusi yang relevan dengan bisnis Anda."
+                : "From idea to implementation, we help build solutions that are relevant to your business."}
+            </p>
+          </div>
 
-            <div className="lg:col-span-7">
-              <div className="relative">
-                {/* Connecting line */}
+          {/* SERVICE CARDS */}
+          <div className="mt-10 grid grid-cols-1 gap-5 md:mt-12 md:grid-cols-3">
+            {services.map((item) => (
+              <div
+                key={item.number}
+                className="group relative min-h-[360px] overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 p-7 transition-all duration-300 hover:-translate-y-1.5 hover:border-neutral-300 hover:bg-white hover:shadow-[0_20px_50px_rgba(0,0,0,0.07)] sm:p-8 md:min-h-[390px] md:p-9"
+              >
+                <div className="relative z-10 flex items-center justify-between">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-[#F59E0B] transition-colors duration-300 group-hover:bg-[#F59E0B] group-hover:text-white">
+                    <Icon name={item.icon} size={22} />
+                  </div>
 
-                <div className="absolute bottom-8 left-[20px] top-8 hidden w-px bg-white/10 md:block" />
-
-                <div>
-                  {approach.map((item) => (
-                    <div
-                      key={item.number}
-                      className="group relative flex gap-6 border-t border-white/10 py-7 md:gap-8 md:py-8"
-                    >
-                      {/* Icon */}
-
-                      <div className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-[#171717] text-[#F59E0B] transition-all duration-300 group-hover:border-[#F59E0B] group-hover:bg-[#F59E0B] group-hover:text-white">
-                        <Icon name={item.icon} size={18} />
-                      </div>
-
-                      {/* Content */}
-
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between gap-5">
-                          <h3 className="text-[19px] font-bold">
-                            {item.title}
-                          </h3>
-
-                          <span className="text-[10px] font-bold tracking-[0.15em] text-[#F59E0B]">
-                            {item.number}
-                          </span>
-                        </div>
-
-                        <p className="mt-2 max-w-[500px] text-[13px] leading-6 text-white/45">
-                          {item.text}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-
-                  <div className="border-t border-white/10" />
+                  <NumberBadge number={item.number} />
                 </div>
+
+                <div className="absolute bottom-8 left-7 right-7 z-10 sm:left-8 sm:right-8 md:left-9 md:right-9">
+                  <h3 className="font-[var(--font-plus-jakarta)] text-xl font-bold tracking-tight sm:text-2xl">
+                    {item.title}
+                  </h3>
+
+                  <p className="mt-3 text-sm leading-7 text-neutral-600">
+                    {item.description}
+                  </p>
+
+                  <div className="mt-6 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#F59E0B]">
+                    {isID ? "Pelajari lebih lanjut" : "Learn more"}
+
+                    <span className="transition-transform duration-300 group-hover:translate-x-1">
+                      <Icon name="arrow" size={15} />
+                    </span>
+                  </div>
+                </div>
+
+                <span className="pointer-events-none absolute -bottom-10 -right-3 font-[var(--font-plus-jakarta)] text-[120px] font-bold leading-none tracking-tight text-neutral-100 transition-transform duration-500 group-hover:translate-x-2">
+                  {item.number}
+                </span>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-
-
-      <CTA />
+     
 
       <Footer />
     </main>
   );
 }
-
-
 
 export default function AboutPage() {
   return (

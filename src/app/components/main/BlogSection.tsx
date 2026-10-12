@@ -1,75 +1,92 @@
+
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
 interface BlogPost {
   id: string;
-  category: string;
-  imageSrc: string;
-  date: string;
-  readTime: string;
   title: string;
-  excerpt: string;
-  authorName: string;
-  authorInitials: string;
+  slug: string;
+  excerpt: string | null;
+  imageUrl: string | null;
+  published: boolean;
+  updatedAt: string;
 }
 
-const blogPosts: BlogPost[] = [
-  {
-    id: "1",
-    category: "Cybersecurity",
-    imageSrc:
-      "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=600",
-    date: "29 September 2025",
-    readTime: "5 mins read",
-    title: "How Agentic AI is Changing the Game in Cybersecurity",
-    excerpt:
-      "Agentic AI brings proactive, autonomous defense to cybersecurity—detecting, learning, and responding to threats in real time. ISGS combines this AI speed with human expertise to deliver smarter, adaptive protection that keeps organizations ahead of evolving cyber risks.",
-    authorName: "Admin",
-    authorInitials: "AS",
-  },
-  {
-    id: "2",
-    category: "Artificial Intelligence",
-    imageSrc:
-      "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=600",
-    date: "16 April 2026",
-    readTime: "7 mins read",
-    title: "Why Most AI Projects Fail And How to Avoid It",
-    excerpt:
-      "AI is transforming industries, but many projects fail due to unclear goals, poor data, and weak implementation. With the right strategy and strong data foundation, AI can deliver real business impact.",
-    authorName: "Admin",
-    authorInitials: "NM",
-  },
-  {
-    id: "3",
-    category: "Automation",
-    imageSrc:
-      "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=600",
-    date: "19 July 2025",
-    readTime: "3 mins read",
-    title: "Agentic AI and the Future of Intelligent Automation",
-    excerpt:
-      "Agentic AI enables systems to go beyond passive responses by autonomously executing tasks, making decisions, and adapting to change. Integrated with automation platforms, it transforms workflows into dynamic, self-optimizing processes.",
-    authorName: "Admin",
-    authorInitials: "BP",
-  },
-];
+interface BlogResponse {
+  success: boolean;
+  blogs?: BlogPost[];
+  message?: string;
+  error?: string;
+}
 
 export default function BlogSection() {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchBlogs() {
+      try {
+        const response = await fetch("/api/blogs", {
+          cache: "no-store",
+        });
+
+        const data: BlogResponse = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(
+            data.error ||
+              data.message ||
+              "Failed to fetch blogs."
+          );
+        }
+
+        setBlogPosts((data.blogs ?? []).slice(0, 3));
+      } catch (error) {
+        console.error("Failed to fetch blogs:", error);
+        setBlogPosts([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchBlogs();
+  }, []);
+
+  function formatDate(date: string) {
+    return new Date(date).toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  }
+
   return (
     <section className="w-full bg-white py-16 font-sans">
       <div className="container-main">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
-          <h2 className="text-3xl font-extrabold text-[#0a1752]">
-            Blog
-          </h2>
+        <div className="mb-8 flex items-end justify-between">
+          <div>
+            {/* Label */}
+            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[#F59E0B]">
+              Blog
+            </p>
 
-          <a
-            href="#"
-            className="flex items-center rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+            {/* Title */}
+            <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-[#113a5d] md:text-4xl">
+              Berita terbaru hari ini
+            </h2>
+          </div>
+
+          <Link
+            href="/blogs"
+            className="group flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-[0_3px_12px_-5px_rgba(0,0,0,0.15)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#F59E0B]/40 hover:text-[#B45309] hover:shadow-[0_6px_18px_-6px_rgba(0,0,0,0.2)]"
           >
             View All Articles
 
             <svg
-              className="ml-2 h-4 w-4 text-gray-400"
+              className="ml-2 h-4 w-4 text-gray-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-[#F59E0B]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -81,62 +98,95 @@ export default function BlogSection() {
                 d="M14 5l7 7m0 0l-7 7m7-7H3"
               />
             </svg>
-          </a>
+          </Link>
         </div>
+
+        {/* Loading */}
+        {loading && (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="h-[480px] animate-pulse rounded-2xl border border-gray-100 bg-gray-100 shadow-[0_8px_25px_-12px_rgba(0,0,0,0.2)]"
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Empty */}
+        {!loading && blogPosts.length === 0 && (
+          <div className="rounded-2xl border border-gray-200 bg-gray-50 px-6 py-12 text-center shadow-[0_8px_25px_-15px_rgba(0,0,0,0.15)]">
+            <p className="text-sm font-medium text-gray-500">
+              No blog articles available.
+            </p>
+          </div>
+        )}
 
         {/* Blog Cards */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {blogPosts.map((post) => (
-            <div
-              key={post.id}
-              className="flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)] transition-shadow duration-300 hover:shadow-lg"
-            >
-              {/* Image */}
-              <div className="relative h-52 w-full shrink-0">
-                <img
-                  src={post.imageSrc}
-                  alt={post.title}
-                  className="h-full w-full object-cover"
-                />
+        {!loading && blogPosts.length > 0 && (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {blogPosts.map((post) => (
+              <Link
+                key={post.id}
+                href={`/blog/${post.slug}`}
+                className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_8px_25px_-12px_rgba(0,0,0,0.22)] transition-all duration-300 hover:-translate-y-1 hover:border-gray-300 hover:shadow-[0_16px_35px_-12px_rgba(0,0,0,0.28)]"
+              >
+                {/* Image */}
+                <div className="relative h-52 w-full shrink-0 overflow-hidden bg-gray-100">
+                  {post.imageUrl ? (
+                    <>
+                      <img
+                        src={post.imageUrl}
+                        alt={post.title}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
 
-                <div className="absolute left-4 top-4 rounded-full bg-[#1a1b26] px-3 py-1.5 text-[11px] font-semibold text-white">
-                  {post.category}
+                      {/* Image Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-90" />
+
+                      {/* Image Label */}
+                      <div className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#113a5d] shadow-sm">
+                        Blog
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-gray-100 text-sm font-medium text-gray-400">
+                      No Image
+                    </div>
+                  )}
                 </div>
-              </div>
 
-              {/* Content */}
-              <div className="flex flex-grow flex-col p-6">
-                <div className="mb-3 flex items-center text-[13px] font-medium text-gray-400">
-                  <span>{post.date}</span>
+                {/* Content */}
+                <div className="flex flex-grow flex-col p-6">
+                  {/* Date */}
+                  <div className="mb-3 flex items-center gap-2 text-[12px] font-semibold text-gray-400">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#F59E0B]" />
 
-                  <span className="mx-2 flex items-center justify-center">
-                    <span className="h-1 w-1 rounded-full bg-gray-300" />
-                  </span>
-
-                  <span>{post.readTime}</span>
-                </div>
-
-                <h3 className="mb-3 line-clamp-2 text-xl font-bold leading-snug text-[#0a1752]">
-                  {post.title}
-                </h3>
-
-                <p className="mb-6 flex-grow text-sm leading-relaxed text-gray-500">
-                  {post.excerpt}
-                </p>
-
-                <div className="mt-auto flex items-center border-t border-transparent pt-4">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#112340] text-xs font-bold text-white">
-                    {post.authorInitials}
+                    {formatDate(post.updatedAt)}
                   </div>
 
-                  <span className="ml-3 text-sm font-semibold text-gray-700">
-                    {post.authorName}
-                  </span>
+                  {/* Title */}
+                  <h3 className="mb-3 line-clamp-2 text-xl font-extrabold leading-snug tracking-tight text-[#0a1752] transition-colors duration-300 group-hover:text-[#B45309]">
+                    {post.title}
+                  </h3>
+
+                  {/* Excerpt */}
+                  <p className="mb-6 line-clamp-3 flex-grow text-sm font-medium leading-relaxed text-gray-500">
+                    {post.excerpt || "Read this article to learn more."}
+                  </p>
+
+                  {/* Read More */}
+                  <div className="mt-auto flex items-center justify-end border-t border-gray-100 pt-4">
+                    <span className="flex items-center gap-2 text-sm font-bold text-[#113a5d] transition-all duration-300 group-hover:gap-3 group-hover:text-[#B45309]">
+                      Read More
+                      <span className="text-base">→</span>
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useLanguage } from "../global/LanguageProvider";
@@ -94,20 +95,20 @@ export default function OurStrengthSection() {
   return (
     <section
       id="strength"
-      className="w-full bg-[#f7fafc] py-16 font-sans"
+      className="w-full bg-[#f7fafc] py-16 font-[var(--font-inter)]"
     >
       <div className="container-main">
         {/* Header */}
         <div className="mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-start">
           {/* Left */}
           <div className="max-w-md">
-            <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-[#F59E0B]">
+            <h4 className="mb-2 font-[var(--font-inter)] text-xs font-bold uppercase tracking-[0.16em] text-[#F59E0B]">
               {language === "ID"
                 ? "KEUNGGULAN KAMI"
                 : "OUR STRENGTH"}
             </h4>
 
-            <h2 className="text-3xl font-extrabold leading-tight text-[#113a5d] md:text-4xl">
+            <h2 className="font-[var(--font-plus-jakarta)] text-3xl font-bold leading-[1.2] tracking-[-0.04em] text-[#113a5d] md:text-4xl">
               {language === "ID" ? (
                 <>
                   Mengapa Memilih
@@ -126,10 +127,10 @@ export default function OurStrengthSection() {
 
           {/* Right */}
           <div className="max-w-md md:pt-8">
-            <p className="text-sm leading-relaxed text-[#476274] md:text-base">
+            <p className="font-[var(--font-inter)] text-sm font-normal leading-7 text-[#476274] md:text-base md:leading-8">
               {language === "ID"
-                ? "5 alasan mengapa IFTECH SOLUSINDO adalah software house yang tepat untuk memenuhi kebutuhan digitalisasi bisnis Anda."
-                : "5 reasons why IFTECH SOLUSINDO is the right software house for your business digitalization needs."}
+                ? "5 alasan mengapa IFTECH SOLUSINDO adalah solusi yang tepat untuk memenuhi berbagai kebutuhan teknologi bisnis Anda."
+                : "5 reasons why IFTECH SOLUSINDO is the right solution for your business technology needs."}
             </p>
           </div>
         </div>
@@ -139,22 +140,28 @@ export default function OurStrengthSection() {
           {currentStrengths.map((item) => (
             <div
               key={item.number}
-              className={`group relative h-72 overflow-hidden rounded-2xl bg-white shadow-sm md:h-80 ${item.colSpanClass}`}
+              className={`group relative h-72 overflow-hidden rounded-2xl bg-[#113a5d] shadow-sm md:h-80 ${item.colSpanClass}`}
             >
+              {/* Image */}
               <img
                 src={item.imageSrc}
                 alt={item.title}
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
 
-              <div className="absolute bottom-0 h-[65%] w-full bg-gradient-to-t from-white via-white/80 to-transparent" />
+              {/* Dark Overlay */}
+              <div className="absolute inset-0 bg-black/35 transition-all duration-300 group-hover:bg-black/50" />
 
+              {/* Bottom Gradient */}
+              <div className="absolute inset-x-0 bottom-0 h-[65%] bg-gradient-to-t from-black/85 via-black/45 to-transparent" />
+
+              {/* Content */}
               <div className="absolute bottom-0 left-0 z-10 w-full p-6">
-                <span className="mb-1 block text-xl font-extrabold text-[#F59E0B]">
+                <span className="mb-2 block font-[var(--font-inter)] text-xl font-bold text-[#F59E0B]">
                   {item.number}
                 </span>
 
-                <h3 className="pr-4 text-lg font-bold text-[#113a5d]">
+                <h3 className="pr-4 font-[var(--font-plus-jakarta)] text-lg font-semibold leading-snug tracking-[-0.02em] text-white">
                   {item.title}
                 </h3>
               </div>

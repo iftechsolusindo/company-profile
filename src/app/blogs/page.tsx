@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Footer from "../components/global/Footer";
 import CTA from "../components/main/CTA";
@@ -11,93 +12,15 @@ import {
   useLanguage,
 } from "../components/global/LanguageProvider";
 
-type BlogCategory = "Technology" | "Business" | "Development";
-
 interface Blog {
   id: number;
-  category: BlogCategory;
   title: string;
-  excerpt: string;
-  date: string;
-  image: string;
-  readTime: string;
+  slug: string;
+  excerpt: string | null;
+  imageUrl: string | null;
+  published: boolean;
+  updatedAt: string;
 }
-
-const blogs: Blog[] = [
-  {
-    id: 1,
-    category: "Technology",
-    title: "How Technology Helps Businesses Grow in the Digital Era",
-    excerpt:
-      "Exploring how the right technology can improve business processes, efficiency, and decision making.",
-    date: "12 September 2026",
-    readTime: "5 min read",
-    image:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=85",
-  },
-  {
-    id: 2,
-    category: "Development",
-    title: "Building Scalable Software for Growing Businesses",
-    excerpt:
-      "Key considerations when designing software systems that can adapt to changing business requirements.",
-    date: "05 September 2026",
-    readTime: "6 min read",
-    image:
-      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=85",
-  },
-  {
-    id: 3,
-    category: "Business",
-    title: "Digital Transformation: Where Should Businesses Start?",
-    excerpt:
-      "A practical look at the first steps businesses can take when beginning their digital transformation journey.",
-    date: "28 August 2026",
-    readTime: "7 min read",
-    image:
-      "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=85",
-  },
-  {
-    id: 4,
-    category: "Technology",
-    title: "Why Cloud Technology Matters for Modern Applications",
-    excerpt:
-      "Understanding how cloud infrastructure can support flexibility, scalability, and reliable application delivery.",
-    date: "20 August 2026",
-    readTime: "5 min read",
-    image:
-      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=85",
-  },
-  {
-    id: 5,
-    category: "Development",
-    title: "From Business Requirements to Software Solutions",
-    excerpt:
-      "How a structured development process turns business requirements into functional and maintainable software.",
-    date: "14 August 2026",
-    readTime: "6 min read",
-    image:
-      "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=85",
-  },
-  {
-    id: 6,
-    category: "Business",
-    title: "The Role of Software in Improving Operational Efficiency",
-    excerpt:
-      "How custom software can help organizations simplify workflows and gain better visibility into their operations.",
-    date: "07 August 2026",
-    readTime: "5 min read",
-    image:
-      "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=85",
-  },
-];
-
-const categories: Array<"All" | BlogCategory> = [
-  "All",
-  "Technology",
-  "Business",
-  "Development",
-];
 
 function BlogCard({
   blog,
@@ -106,57 +29,139 @@ function BlogCard({
   blog: Blog;
   isID: boolean;
 }) {
+  const formattedDate = new Intl.DateTimeFormat(
+    isID ? "id-ID" : "en-US",
+    {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    },
+  ).format(new Date(blog.updatedAt));
+
   return (
-    <article className="group flex overflow-hidden border border-black/[0.08] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#F59E0B]/40 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)]">
-      {/* Image */}
-      <div className="relative w-[42%] shrink-0 overflow-hidden">
-        <img
-          src={blog.image}
-          alt={blog.title}
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+    <article className="group flex min-w-0 flex-col overflow-hidden rounded-xl border border-black/[0.07] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#F59E0B]/40 hover:shadow-[0_18px_45px_rgba(0,0,0,0.07)] sm:flex-row">
+      {/* IMAGE */}
+      <a
+        href={`/blogs/${blog.slug}`}
+        aria-label={
+          isID
+            ? `Baca artikel ${blog.title}`
+            : `Read article ${blog.title}`
+        }
+        className="relative block aspect-[16/10] shrink-0 overflow-hidden bg-[#F0F0ED] sm:aspect-auto sm:w-[40%]"
+      >
+        {blog.imageUrl ? (
+          <img
+            src={blog.imageUrl}
+            alt={blog.title}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-3">
+              <span className="text-2xl font-semibold tracking-tight text-black/10">
+                IFTECH
+              </span>
+              <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-black/30">
+                {isID ? "Artikel" : "Article"}
+              </span>
+            </div>
+          </div>
+        )}
 
-        <div className="absolute inset-0 bg-black/10 transition-colors duration-300 group-hover:bg-black/0" />
-      </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-40" />
 
-      {/* Content */}
-      <div className="flex min-h-[230px] flex-1 flex-col p-5 md:p-6">
-        {/* Meta */}
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#F59E0B]">
-            {blog.category}
+        <span className="absolute left-3 top-3 rounded-full border border-white/30 bg-black/40 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-white backdrop-blur-sm">
+          IFTECH Journal
+        </span>
+      </a>
+
+      {/* CONTENT */}
+      <div className="flex min-w-0 flex-1 flex-col p-5 sm:p-5 md:p-6">
+        {/* META */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <span className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[0.15em] text-[#B77900]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#F59E0B]" />
+            Blog
           </span>
 
-          <span className="text-[9px] text-black/35">
-            {blog.readTime}
-          </span>
+          <span className="h-3 w-px bg-black/10" />
+
+          <time
+            dateTime={blog.updatedAt}
+            className="text-[10px] text-neutral-400"
+          >
+            {formattedDate}
+          </time>
         </div>
 
-        {/* Title */}
-        <h2 className="mt-4 text-[19px] font-semibold leading-[1.15] tracking-[-0.035em] text-[#171717] transition-colors duration-300 group-hover:text-[#F59E0B] md:text-[21px]">
+        {/* TITLE */}
+        <h2 className="mt-4 line-clamp-2 text-lg font-semibold leading-snug tracking-tight text-[#171717] transition-colors duration-300 group-hover:text-[#B77900] md:text-xl">
           {blog.title}
         </h2>
 
-        {/* Excerpt */}
-        <p className="mt-3 line-clamp-3 text-[11px] leading-5 text-black/45">
-          {blog.excerpt}
+        {/* EXCERPT */}
+        <p className="mt-3 line-clamp-3 text-xs leading-6 text-neutral-500">
+          {blog.excerpt ||
+            (isID
+              ? "Jelajahi insight dan informasi terbaru dari IFTECH Solusindo."
+              : "Explore the latest insights and information from IFTECH Solusindo.")}
         </p>
 
-        {/* Bottom */}
-        <div className="mt-auto flex items-center justify-between pt-5">
-          <span className="text-[9px] text-black/35">
-            {blog.date}
+        {/* FOOTER */}
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-black/[0.06] pt-4 mt-5">
+          <span className="text-[9px] font-medium uppercase tracking-[0.12em] text-neutral-400">
+            IFTECH SOLUSINDO
           </span>
 
-          <button className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.12em] text-[#171717] transition-colors hover:text-[#F59E0B]">
-            {isID ? "Baca" : "Read"}
-            <span className="text-[14px] transition-transform duration-300 group-hover:translate-x-1">
-              →
-            </span>
-          </button>
+          <a
+            href={`/blogs/${blog.slug}`}
+            className="inline-flex shrink-0 items-center gap-2 text-[10px] font-semibold text-neutral-800 transition-colors hover:text-[#B77900]"
+          >
+            {isID ? "Baca Artikel" : "Read Article"}
+
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 20 20"
+              fill="none"
+              className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+            >
+              <path
+                d="M4 10H16M10 4L16 10L10 16"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </a>
         </div>
       </div>
     </article>
+  );
+}
+
+function BlogSkeleton() {
+  return (
+    <div className="flex min-w-0 animate-pulse flex-col overflow-hidden rounded-xl border border-black/[0.06] bg-white sm:flex-row">
+      <div className="aspect-[16/10] shrink-0 bg-neutral-200 sm:aspect-auto sm:w-[40%]" />
+
+      <div className="flex flex-1 flex-col p-5 md:p-6">
+        <div className="h-3 w-24 rounded bg-neutral-200" />
+        <div className="mt-5 h-5 w-full rounded bg-neutral-200" />
+        <div className="mt-2 h-5 w-3/4 rounded bg-neutral-200" />
+
+        <div className="mt-5 h-3 w-full rounded bg-neutral-100" />
+        <div className="mt-2 h-3 w-full rounded bg-neutral-100" />
+        <div className="mt-2 h-3 w-2/3 rounded bg-neutral-100" />
+
+        <div className="mt-7 flex justify-between border-t border-black/[0.06] pt-4">
+          <div className="h-3 w-24 rounded bg-neutral-100" />
+          <div className="h-3 w-20 rounded bg-neutral-200" />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -164,136 +169,316 @@ function BlogsContent() {
   const { language } = useLanguage();
   const isID = language === "ID";
 
-  const [activeCategory, setActiveCategory] =
-    useState<(typeof categories)[number]>("All");
-
+  const [blogs, setBlogs] = useState<Blog[]>([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function fetchBlogs() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch("/api/blogs", {
+          signal: controller.signal,
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || "Failed to fetch blogs.",
+          );
+        }
+
+        setBlogs(
+          Array.isArray(data.blogs) ? data.blogs : [],
+        );
+      } catch (err) {
+        if (
+          err instanceof Error &&
+          err.name === "AbortError"
+        ) {
+          return;
+        }
+
+        console.error("Failed to fetch blogs:", err);
+
+        setError(
+          isID
+            ? "Artikel belum dapat dimuat. Silakan coba kembali."
+            : "Articles could not be loaded. Please try again.",
+        );
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchBlogs();
+
+    return () => controller.abort();
+  }, [isID]);
 
   const filteredBlogs = useMemo(() => {
+    const searchValue = search.trim().toLocaleLowerCase(
+      isID ? "id-ID" : "en-US",
+    );
+
+    if (!searchValue) {
+      return blogs;
+    }
+
     return blogs.filter((blog) => {
-      const matchesCategory =
-        activeCategory === "All" ||
-        blog.category === activeCategory;
+      const title = blog.title.toLocaleLowerCase(
+        isID ? "id-ID" : "en-US",
+      );
 
-      const searchValue = search.toLowerCase();
+      const excerpt = (
+        blog.excerpt || ""
+      ).toLocaleLowerCase(isID ? "id-ID" : "en-US");
 
-      const matchesSearch =
-        blog.title.toLowerCase().includes(searchValue) ||
-        blog.excerpt.toLowerCase().includes(searchValue) ||
-        blog.category.toLowerCase().includes(searchValue);
-
-      return matchesCategory && matchesSearch;
+      return (
+        title.includes(searchValue) ||
+        excerpt.includes(searchValue)
+      );
     });
-  }, [activeCategory, search]);
+  }, [blogs, search, isID]);
 
   return (
-    <main className="min-h-screen bg-[#F7F7F5] text-[#171717]">
+    <main className="min-h-screen overflow-hidden bg-[#F7F7F5] text-[#171717]">
       <NavbarMain />
 
-      {/* BLOG HEADER */}
-      <section className="border-b border-black/[0.08] bg-white">
-        <div className="mx-auto max-w-[1180px] px-6 pb-12 pt-28 md:px-10 md:pb-16 md:pt-36">
-          <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-            <div className="max-w-[700px]">
-              <div className="mb-5 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.18em] text-black/35">
+      {/* HERO SECTION */}
+      <section className="relative overflow-hidden border-b border-black/[0.07] bg-white">
+        {/* DECORATIVE ELEMENTS */}
+        <div className="pointer-events-none absolute -right-24 -top-28 h-80 w-80 rounded-full border border-black/[0.035] sm:h-96 sm:w-96" />
+
+        <div className="pointer-events-none absolute -right-10 -top-14 h-60 w-60 rounded-full border border-black/[0.04] sm:h-72 sm:w-72" />
+
+        <div className="pointer-events-none absolute -bottom-20 left-[42%] h-52 w-52 rounded-full bg-[#F59E0B]/[0.07] blur-3xl" />
+
+        <div className="relative mx-auto max-w-[1440px] px-6 pb-10 pt-28 sm:px-10 sm:pb-12 sm:pt-32 md:px-14 md:pb-14 md:pt-36 lg:px-20 xl:px-24">
+          <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-[1fr_auto] md:gap-10">
+            <div className="max-w-4xl">
+              {/* EYEBROW */}
+              <div className="mb-5 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
                 <span>IFTECH SOLUSINDO</span>
-                <span className="h-px w-7 bg-black/15" />
-                <span className="text-[#F59E0B]">Blog</span>
+                <span className="h-px w-8 bg-[#F59E0B]" />
+                <span className="text-[#B77900]">
+                  Blogs
+                </span>
               </div>
 
-              <h1 className="text-[44px] font-semibold leading-[1.04] tracking-[-0.055em] sm:text-[54px] md:text-[64px]">
+              {/* TITLE */}
+              <h1 className="max-w-4xl text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-5xl md:text-6xl lg:text-7xl">
                 {isID ? (
                   <>
-                    Insight, teknologi, dan{" "}
-                    <span className="text-[#F59E0B]">
-                      inovasi.
+                    Ide besar.
+                    <br />
+                    <span className="text-[#B77900]">
+                      Perspektif baru.
                     </span>
                   </>
                 ) : (
                   <>
-                    Insights, technology, and{" "}
-                    <span className="text-[#F59E0B]">
-                      innovation.
+                    Big ideas.
+                    <br />
+                    <span className="text-[#B77900]">
+                      Fresh perspectives.
                     </span>
                   </>
                 )}
               </h1>
 
-              <p className="mt-5 max-w-[600px] text-[13px] leading-6 text-black/45">
+              <p className="mt-5 max-w-2xl text-sm leading-7 text-neutral-500 sm:text-base sm:leading-8">
                 {isID
-                  ? "Temukan berbagai insight mengenai teknologi, software development, dan transformasi digital."
-                  : "Explore insights about technology, software development, and digital transformation."}
+                  ? "Temukan wawasan seputar teknologi, pengembangan perangkat lunak, dan transformasi digital untuk membantu bisnis terus berkembang."
+                  : "Explore insights on technology, software development, and digital transformation to help businesses move forward."}
               </p>
             </div>
 
-            {/* Blog count */}
-            <div className="border-l border-black/10 pl-5 md:min-w-[140px]">
-              <div className="text-[34px] font-semibold tracking-[-0.05em]">
-                {String(blogs.length).padStart(2, "0")}
-                <span className="text-[#F59E0B]">+</span>
+            {/* ARTICLE COUNT */}
+            <div className="flex items-center gap-4 border-t border-black/[0.08] pt-5 md:min-w-[170px] md:border-l md:border-t-0 md:pl-7 md:pt-0">
+              <div>
+                <p className="text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">
+                  {String(blogs.length).padStart(2, "0")}
+                  <span className="text-[#F59E0B]">+</span>
+                </p>
+
+                <p className="mt-2 text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
+                  {isID ? "Artikel dipublikasikan" : "Published articles"}
+                </p>
               </div>
-
-              <p className="text-[9px] uppercase tracking-[0.14em] text-black/35">
-                {isID ? "Artikel" : "Articles"}
-              </p>
             </div>
+          </div>
+
+          {/* BOTTOM ACCENT */}
+          <div className="mt-9 flex items-center gap-2">
+            <span className="h-1 w-10 rounded-full bg-[#F59E0B]" />
+            <span className="h-1 w-3 rounded-full bg-neutral-200" />
+            <span className="h-1 w-3 rounded-full bg-neutral-200" />
           </div>
         </div>
       </section>
 
-      {/* BLOG LIST */}
-      <section className="mx-auto max-w-[1180px] px-6 py-16 md:px-10 md:py-20">
-        {/* Search + Filter */}
-        <div className="mb-10 flex flex-col gap-5 border-b border-black/[0.08] pb-7 lg:flex-row lg:items-center lg:justify-between">
-          {/* Filter */}
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => {
-              const active = activeCategory === category;
+      {/* BLOG LIST SECTION */}
+      <section className="mx-auto max-w-[1440px] px-6 py-10 sm:px-10 sm:py-12 md:px-14 md:py-14 lg:px-20 xl:px-24">
+        {/* SECTION HEADER + SEARCH */}
+        <div className="mb-7 flex flex-col gap-5 border-b border-black/[0.08] pb-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#F59E0B]" />
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
+                {isID ? "Jelajahi Artikel" : "Explore Articles"}
+              </p>
+            </div>
 
-              const label =
-                category === "All"
-                  ? isID
-                    ? "Semua"
-                    : "All"
-                  : category;
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
+              {isID ? "Artikel Terbaru" : "Latest Articles"}
+              <span className="text-[#F59E0B]">.</span>
+            </h2>
 
-              return (
-                <button
-                  key={category}
-                  onClick={() => setActiveCategory(category)}
-                  className={`border px-4 py-2 text-[9px] font-bold uppercase tracking-[0.12em] transition-all duration-200 ${
-                    active
-                      ? "border-[#F59E0B] bg-[#F59E0B] text-white"
-                      : "border-black/10 bg-white text-black/45 hover:border-black/25 hover:text-black"
-                  }`}
-                >
-                  {label}
-                </button>
-              );
-            })}
+            <p className="mt-2 text-xs leading-6 text-neutral-500 sm:text-sm">
+              {isID
+                ? "Ide, informasi, dan perspektif terbaru dari kami."
+                : "The latest ideas, information, and perspectives from our team."}
+            </p>
           </div>
 
-          {/* Search */}
-          <div className="relative w-full lg:max-w-[280px]">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={
-                isID ? "Cari artikel..." : "Search articles..."
-              }
-              className="w-full border border-black/10 bg-white px-4 py-3 pr-10 text-[11px] outline-none transition-colors placeholder:text-black/25 focus:border-[#F59E0B]"
-            />
+          {/* SEARCH */}
+          <div className="relative w-full sm:max-w-[300px]">
+            <label
+              htmlFor="blog-search"
+              className="mb-2 block text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-400"
+            >
+              {isID ? "Cari artikel" : "Search articles"}
+            </label>
 
-            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-black/30">
-              ⌕
-            </span>
+            <div className="relative">
+              <input
+                id="blog-search"
+                type="search"
+                value={search}
+                onChange={(event) =>
+                  setSearch(event.target.value)
+                }
+                placeholder={
+                  isID
+                    ? "Ketik judul atau topik..."
+                    : "Enter a title or topic..."
+                }
+                className="w-full rounded-lg border border-black/[0.09] bg-white px-4 py-3 pr-11 text-xs text-neutral-800 outline-none transition placeholder:text-neutral-400 focus:border-[#F59E0B] focus:ring-2 focus:ring-[#F59E0B]/10"
+              />
+
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400"
+              >
+                <circle
+                  cx="10.8"
+                  cy="10.8"
+                  r="6.8"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                />
+                <path
+                  d="m16 16 4 4"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
           </div>
         </div>
 
-        {/* Results */}
-        {filteredBlogs.length > 0 ? (
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        {/* RESULT COUNT */}
+        {!loading && !error && (
+          <div className="mb-5 flex items-center justify-between gap-4">
+            <p className="text-[10px] text-neutral-400">
+              {isID
+                ? `Menampilkan ${filteredBlogs.length} dari ${blogs.length} artikel`
+                : `Showing ${filteredBlogs.length} of ${blogs.length} articles`}
+            </p>
+
+            {search.trim() && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="text-[10px] font-semibold text-neutral-500 transition-colors hover:text-[#B77900]"
+              >
+                {isID ? "Hapus pencarian" : "Clear search"}
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* LOADING */}
+        {loading && (
+          <div
+            className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5"
+            aria-busy="true"
+            aria-label={isID ? "Memuat artikel" : "Loading articles"}
+          >
+            {Array.from({ length: 4 }).map((_, index) => (
+              <BlogSkeleton key={index} />
+            ))}
+          </div>
+        )}
+
+        {/* ERROR */}
+        {!loading && error && (
+          <div
+            className="rounded-xl border border-red-200 bg-white px-5 py-12 text-center sm:py-16"
+            role="alert"
+          >
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-500">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                className="h-5 w-5"
+              >
+                <path
+                  d="M12 8v5m0 3h.01M10.3 3.9 2.9 17a2 2 0 0 0 1.75 3h14.7a2 2 0 0 0 1.75-3l-7.4-13.1a2 2 0 0 0-3.4 0Z"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+
+            <h3 className="mt-4 text-base font-semibold">
+              {isID
+                ? "Artikel gagal dimuat"
+                : "Unable to load articles"}
+            </h3>
+
+            <p className="mx-auto mt-2 max-w-md text-xs leading-6 text-neutral-500">
+              {error}
+            </p>
+
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="mt-5 rounded-lg bg-[#171717] px-5 py-3 text-[10px] font-semibold text-white transition hover:bg-[#333333]"
+            >
+              {isID ? "Coba Lagi" : "Try Again"}
+            </button>
+          </div>
+        )}
+
+        {/* ARTICLES */}
+        {!loading && !error && filteredBlogs.length > 0 && (
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
             {filteredBlogs.map((blog) => (
               <BlogCard
                 key={blog.id}
@@ -302,18 +487,71 @@ function BlogsContent() {
               />
             ))}
           </div>
-        ) : (
-          <div className="border border-black/[0.08] bg-white py-20 text-center">
-            <p className="text-[12px] text-black/40">
-              {isID
-                ? "Artikel tidak ditemukan."
-                : "No articles found."}
+        )}
+
+        {/* EMPTY STATE */}
+        {!loading && !error && filteredBlogs.length === 0 && (
+          <div className="rounded-xl border border-black/[0.07] bg-white px-5 py-14 text-center sm:py-16">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#F59E0B]/10 text-[#B77900]">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                className="h-5 w-5"
+              >
+                <circle
+                  cx="10.8"
+                  cy="10.8"
+                  r="6.8"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                />
+                <path
+                  d="m16 16 4 4"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+
+            <h3 className="mt-4 text-base font-semibold">
+              {search.trim()
+                ? isID
+                  ? "Artikel tidak ditemukan"
+                  : "No articles found"
+                : isID
+                  ? "Belum ada artikel"
+                  : "No articles yet"}
+            </h3>
+
+            <p className="mx-auto mt-2 max-w-sm text-xs leading-6 text-neutral-500">
+              {search.trim()
+                ? isID
+                  ? "Coba gunakan kata kunci lain atau periksa kembali ejaan pencarian."
+                  : "Try another keyword or check your search spelling."
+                : isID
+                  ? "Artikel baru akan ditampilkan di sini setelah tersedia."
+                  : "New articles will appear here when they become available."}
             </p>
+
+            {search.trim() && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="mt-5 text-xs font-semibold text-[#B77900] transition-colors hover:text-[#F59E0B]"
+              >
+                {isID ? "Tampilkan semua artikel" : "Show all articles"}
+              </button>
+            )}
           </div>
         )}
       </section>
 
+      {/* CTA */}
       <CTA />
+
+      {/* FOOTER */}
       <Footer />
     </main>
   );

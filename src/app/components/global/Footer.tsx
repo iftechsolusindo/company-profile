@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -11,9 +12,16 @@ export default function Footer() {
   return (
     <footer className="bg-[#F7F7F5] text-[#171717]">
       <div className="container-main">
+        {/* ================================
+            MAIN FOOTER
+        ================================= */}
         <div className="border-b border-[#E5E5E5] pb-16 pt-[155px] md:pb-20 md:pt-[175px]">
           <div className="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-10">
-            <div className="lg:col-span-4">
+
+            {/* ================================
+                BRAND + BUSINESS HOURS
+            ================================= */}
+            <div className="lg:col-span-5">
               {/* Logo */}
               <a
                 href="#home"
@@ -45,6 +53,23 @@ export default function Footer() {
                   : "Your technology partner for building innovative, scalable, and reliable digital solutions."}
               </p>
 
+           {/* Business Hours */}
+            <div className="mt-7">
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#F59E0B]">
+                {isID ? "Jam Operasional" : "Business Hours"}
+              </h3>
+
+              <div className="mt-3">
+                <p className="text-[13px] font-medium text-[#555555]">
+                  {isID ? "Senin - Jumat" : "Monday - Friday"}
+                </p>
+
+                <p className="mt-1 text-[12px] leading-5 text-[#777777]">
+                  8 AM - 5 PM {isID ? "(WIB)" : "(Western Indonesia Time)"}
+                </p>
+              </div>
+            </div>
+
               {/* Orange Accent */}
               <div className="mt-7 h-[2px] w-8 rounded-full bg-[#F59E0B]" />
 
@@ -53,6 +78,9 @@ export default function Footer() {
               </p>
             </div>
 
+            {/* ================================
+                NAVIGATION
+            ================================= */}
             <div className="lg:col-span-2">
               <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#F59E0B]">
                 {isID ? "Navigasi" : "Navigation"}
@@ -115,123 +143,69 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* =================================================
-                SERVICES
-            ================================================== */}
-            <div className="lg:col-span-3">
-              <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#F59E0B]">
-                {isID ? "Layanan" : "Services"}
-              </h3>
+            {/* ================================
+                CONTACT - RIGHT
+            ================================= */}
+            <div className="lg:col-span-5 lg:justify-self-end">
+              <div className="lg:max-w-[330px]">
+                <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#F59E0B]">
+                  {isID ? "Hubungi Kami" : "Get in Touch"}
+                </h3>
 
-              <ul className="mt-7 space-y-4 text-[13px] text-[#666666]">
-                <li>
+                <div className="mt-7 space-y-6">
+                  {/* Email */}
                   <a
-                    href="#solutions"
-                    className="transition-colors duration-200 hover:text-[#F59E0B]"
+                    href="mailto:info@iftechsolusindo.com"
+                    className="group block"
                   >
-                    Website Development
-                  </a>
-                </li>
+                    <span className="block text-[10px] font-medium uppercase tracking-[0.12em] text-[#999999]">
+                      Email
+                    </span>
 
-                <li>
+                    <span className="mt-1.5 block text-[13px] text-[#555555] transition-colors group-hover:text-[#F59E0B]">
+                      iftechsolusindo@gmail.com
+                    </span>
+                  </a>
+
+                  {/* Phone */}
                   <a
-                    href="#solutions"
-                    className="transition-colors duration-200 hover:text-[#F59E0B]"
+                    href="tel:+62274539660"
+                    className="group block"
                   >
-                    MVP Development
+                    <span className="block text-[10px] font-medium uppercase tracking-[0.12em] text-[#999999]">
+                      {isID ? "Telepon" : "Phone"}
+                    </span>
+
+                    <span className="mt-1.5 block text-[13px] text-[#555555] transition-colors group-hover:text-[#F59E0B]">
+                      0851-7432-0326
+                    </span>
                   </a>
-                </li>
 
-                <li>
-                  <a
-                    href="#solutions"
-                    className="transition-colors duration-200 hover:text-[#F59E0B]"
-                  >
-                    Mobile App Development
-                  </a>
-                </li>
+                  {/* Location */}
+                  <div>
+                    <span className="block text-[10px] font-medium uppercase tracking-[0.12em] text-[#999999]">
+                      {isID ? "Kantor" : "Office"}
+                    </span>
 
-                <li>
-                  <a
-                    href="#solutions"
-                    className="transition-colors duration-200 hover:text-[#F59E0B]"
-                  >
-                    Custom Software
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#solutions"
-                    className="transition-colors duration-200 hover:text-[#F59E0B]"
-                  >
-                    UI/UX Design
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* =================================================
-                CONTACT
-            ================================================== */}
-            <div className="lg:col-span-3">
-              <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#F59E0B]">
-                {isID ? "Hubungi Kami" : "Get in Touch"}
-              </h3>
-
-              <div className="mt-7 space-y-6">
-                {/* Email */}
-                <a
-                  href="mailto:info@iftechsolusindo.com"
-                  className="group block"
-                >
-                  <span className="block text-[10px] font-medium uppercase tracking-[0.12em] text-[#999999]">
-                    Email
-                  </span>
-
-                  <span className="mt-1.5 block text-[13px] text-[#555555] transition-colors group-hover:text-[#F59E0B]">
-                    info@iftechsolusindo.com
-                  </span>
-                </a>
-
-                {/* Phone */}
-                <a
-                  href="tel:+62274539660"
-                  className="group block"
-                >
-                  <span className="block text-[10px] font-medium uppercase tracking-[0.12em] text-[#999999]">
-                    {isID ? "Telepon" : "Phone"}
-                  </span>
-
-                  <span className="mt-1.5 block text-[13px] text-[#555555] transition-colors group-hover:text-[#F59E0B]">
-                    (0274) 4539660
-                  </span>
-                </a>
-
-                {/* Location */}
-                <div>
-                  <span className="block text-[10px] font-medium uppercase tracking-[0.12em] text-[#999999]">
-                    {isID ? "Kantor" : "Office"}
-                  </span>
-
-                  <p className="mt-1.5 text-[13px] leading-6 text-[#555555]">
-                    Jl. Prof. Herman Yohanes
-                    <br />
-                    No.1125, Terban,
-                    <br />
-                    Gondokusuman,
-                    <br />
-                    Yogyakarta 55223
-                  </p>
+                    <p className="mt-1.5 text-[13px] leading-6 text-[#555555]">
+                      Perumahan Arga Jaya Jalan Wilis CXVIII,
+                      <br />
+                      RT.06/RW.3, Maliyan, Kalinegoro,
+                      <br />
+                      Kec. Mertoyudan, Kabupaten Magelang,
+                      <br />
+                      Jawa Tengah 56172
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* =====================================================
+        {/* ================================
             BOTTOM FOOTER
-        ====================================================== */}
+        ================================= */}
         <div className="flex flex-col gap-5 py-7 md:flex-row md:items-center md:justify-between">
           {/* Copyright */}
           <div className="text-[11px] text-[#999999]">
@@ -247,6 +221,7 @@ export default function Footer() {
 
           {/* Social Media */}
           <div className="flex items-center gap-2">
+            {/* LinkedIn */}
             <a
               href="#"
               aria-label="LinkedIn"
@@ -255,6 +230,7 @@ export default function Footer() {
               in
             </a>
 
+            {/* Instagram */}
             <a
               href="#"
               aria-label="Instagram"
@@ -263,6 +239,7 @@ export default function Footer() {
               ◎
             </a>
 
+            {/* Facebook */}
             <a
               href="#"
               aria-label="Facebook"
@@ -271,6 +248,7 @@ export default function Footer() {
               f
             </a>
 
+            {/* X */}
             <a
               href="#"
               aria-label="X"

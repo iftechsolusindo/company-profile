@@ -1,303 +1,301 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
+import NavbarMain from "../components/global/NavbarMain";
 import Footer from "../components/global/Footer";
 import CTA from "../components/main/CTA";
-import NavbarMain from "../components/global/NavbarMain";
 
 import {
   LanguageProvider,
   useLanguage,
 } from "../components/global/LanguageProvider";
 
-type ProjectCategory = "Software" | "Government";
+type ProjectType = "SOFTWARE" | "GOVERNMENT";
+type ActiveType = "All" | ProjectType;
+
+type Technology = {
+  name: string;
+};
 
 interface Project {
-  id: number;
-  category: ProjectCategory;
+  id: string | number;
   title: string;
-  description: string;
-  image: string;
+  slug: string;
+  imageUrl: string | null;
+  client: string | null;
+  year: string | number | null;
+  type: ProjectType;
+  clientLocation: string | null;
+  link: string | null;
+  category: string | null;
+  devices: string[];
+  projectDetails: string | null;
+  projectDetailsImageUrl: string | null;
+  ourResponsibility: string | null;
+  ourResponsibilityImageUrl: string | null;
+  responsibilities: string[];
+  technologies: Technology[] | null;
+  galleryImageUrl: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#F59E0B]">
-      <span className="h-px w-7 bg-current" />
-      {children}
+    <div className="flex items-center gap-2.5">
+      <span className="h-2 w-2 shrink-0 rounded-full bg-[#F59E0B]" />
+
+      <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-neutral-500 sm:text-[11px]">
+        {children}
+      </span>
     </div>
   );
 }
 
-const projects: Project[] = [
-  {
-    id: 1,
-    category: "Software",
-    title: "Business Management Platform",
-    description:
-      "A digital platform designed to help businesses manage operational processes, data, and workflows in one integrated system.",
-    image:
-      "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1400&q=85",
-  },
-  {
-    id: 2,
-    category: "Software",
-    title: "Enterprise Digital System",
-    description:
-      "An integrated software system built to connect business processes and provide better visibility across daily operations.",
-    image:
-      "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1400&q=85",
-  },
-  {
-    id: 3,
-    category: "Software",
-    title: "Customer Service Platform",
-    description:
-      "A modern web-based platform designed to simplify customer management and improve service workflows.",
-    image:
-      "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1400&q=85",
-  },
-  {
-    id: 4,
-    category: "Government",
-    title: "Public Information System",
-    description:
-      "A digital information platform designed to provide accessible and structured public information.",
-    image:
-      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1400&q=85",
-  },
-  {
-    id: 5,
-    category: "Government",
-    title: "Government Service Platform",
-    description:
-      "A digital platform supporting government services through a more structured and accessible online experience.",
-    image:
-      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1400&q=85",
-  },
-  {
-    id: 6,
-    category: "Government",
-    title: "Regional Management System",
-    description:
-      "A centralized system designed to support administrative processes, reporting, and regional data management.",
-    image:
-      "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=85",
-  },
-];
-
 function ProjectsContent() {
   const { language } = useLanguage();
+
+  // Samakan format bahasa dengan LanguageProvider dan SolutionsPage.
   const isID = language === "ID";
 
-  const [activeCategory, setActiveCategory] = useState<
-    "All" | ProjectCategory
-  >("All");
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [activeType, setActiveType] = useState<ActiveType>("All");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const filteredProjects =
-    activeCategory === "All"
-      ? projects
-      : projects.filter((project) => project.category === activeCategory);
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function fetchProjects() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch("/api/projects", {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch projects");
+        }
+
+        const data = await response.json();
+
+        setProjects(Array.isArray(data.projects) ? data.projects : []);
+      } catch (err) {
+        if (err instanceof Error && err.name === "AbortError") {
+          return;
+        }
+
+        setError(
+          isID
+            ? "Proyek belum dapat dimuat. Silakan coba kembali."
+            : "Projects could not be loaded. Please try again.",
+        );
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchProjects();
+
+    return () => controller.abort();
+  }, [isID]);
+
+  const filteredProjects = projects.filter((project) => {
+    if (activeType === "All") {
+      return true;
+    }
+
+    return project.type === activeType;
+  });
+
+  const getTypeLabel = (type: ProjectType) => {
+    if (type === "GOVERNMENT") {
+      return isID ? "Pemerintahan" : "Government";
+    }
+
+    return "Software";
+  };
 
   return (
-    <main className="min-h-screen bg-white text-[#171717]">
+    <main className="overflow-hidden bg-white text-neutral-900">
       <NavbarMain />
 
-     {/* HERO */}
-<section className="relative overflow-hidden bg-[#171717] text-white">
-  {/* Background decoration */}
-  <div className="pointer-events-none absolute right-[-180px] top-[-180px] h-[520px] w-[520px] rounded-full border-[90px] border-[#F59E0B]/10" />
+      {/* HERO SECTION */}
+      <section className="relative overflow-hidden bg-[#171717] px-6 py-16 text-white sm:px-10 sm:py-20 md:px-14 md:py-24 lg:px-20 lg:py-28 xl:px-24">
+        <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full border border-white/[0.06] md:h-96 md:w-96" />
 
-  <div className="pointer-events-none absolute bottom-[-300px] left-[-180px] h-[560px] w-[560px] rounded-full border-[100px] border-white/[0.025]" />
+        <div className="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full border border-white/[0.08] md:h-72 md:w-72" />
 
-  <div className="relative mx-auto max-w-[1180px] px-6 py-20 md:px-10 md:py-24 lg:py-28">
-    <div className="max-w-[900px]">
-      {/* Label */}
-      <div className="mb-7 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.18em] text-white/35">
-        <span>IFTECH SOLUSINDO</span>
-        <span className="h-px w-8 bg-white/20" />
-        <span className="text-[#F59E0B]">
-          {isID ? "Projects" : "Projects"}
-        </span>
-      </div>
+        <div className="pointer-events-none absolute -bottom-40 -left-24 h-72 w-72 rounded-full bg-[#F59E0B]/[0.06] blur-3xl" />
 
-      {/* Heading */}
-      <h1 className="text-[46px] font-semibold leading-[1.04] tracking-[-0.055em] sm:text-[58px] md:text-[68px]">
-        {isID ? (
-          <>
-            Dari ide menjadi{" "}
-            <span className="text-[#F59E0B]">
-              solusi digital:
-            </span>
-            <br />
-            Project Solusi Kami
-          </>
-        ) : (
-          <>
-            Where Ideas Become{" "}
-            <span className="text-[#F59E0B]">
-              Digital Solutions:
-            </span>
-            <br />
-            Our Solution Projects
-          </>
-        )}
-      </h1>
+        <div className="relative mx-auto max-w-[1440px]">
+          <SectionLabel>
+            {isID ? "Portofolio Kami" : "Our Portfolio"}
+          </SectionLabel>
 
-      {/* Description */}
-      <p className="mt-8 max-w-[780px] text-[14px] leading-7 text-white/45 md:text-[15px] md:leading-7">
-        {isID
-          ? "Dengan pengalaman bertahun-tahun dalam pengembangan software, kami menghadirkan berbagai solusi digital yang dirancang berdasarkan kebutuhan dan tantangan setiap klien. Mulai dari custom software, enterprise platform, hingga sistem terintegrasi, setiap project kami kembangkan dengan memadukan keahlian teknis, desain yang tepat, dan perhatian terhadap kualitas untuk menghasilkan solusi yang praktis, scalable, dan memberikan nilai jangka panjang."
-          : "With years of experience in software development, we transform ideas, requirements, and business challenges into reliable digital solutions. From custom software and enterprise platforms to integrated systems, every project is carefully designed around the unique needs of our clients. We combine technical expertise, thoughtful design, and a commitment to quality to deliver solutions that are practical, scalable, and built to create lasting value."}
-      </p>
+          <div className="mt-6 max-w-4xl">
+            <h1 className="text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+              {isID ? (
+                <>
+                  Solusi Digital
+                  <br />
+                  untuk <span className="text-[#F59E0B]">Masa Depan.</span>
+                </>
+              ) : (
+                <>
+                  Digital Solutions
+                  <br />
+                  for the <span className="text-[#F59E0B]">Future.</span>
+                </>
+              )}
+            </h1>
 
-      {/* Bottom information */}
-      <div className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-5 border-t border-white/10 pt-6">
-        <div>
-          <div className="text-[24px] font-semibold tracking-[-0.04em]">
-            15<span className="text-[#F59E0B]">+</span>
+            <p className="mt-6 max-w-2xl text-sm leading-7 text-neutral-400 sm:text-base sm:leading-8">
+              {isID
+                ? "Jelajahi berbagai proyek yang kami kembangkan melalui teknologi, kreativitas, dan pendekatan yang berorientasi pada kebutuhan klien."
+                : "Explore projects we have developed through technology, creativity, and an approach focused on our clients' needs."}
+            </p>
           </div>
-          <p className="mt-1 text-[9px] uppercase tracking-[0.15em] text-white/30">
-            {isID ? "Tahun Pengalaman" : "Years of Experience"}
-          </p>
-        </div>
 
-        <div className="h-8 w-px bg-white/10" />
+          {/* STATISTICS */}
+          <div className="mt-12 grid grid-cols-1 gap-7 border-t border-white/15 pt-7 sm:grid-cols-3 sm:gap-8 md:mt-14 md:pt-8">
+            <div>
+             <p className="text-2xl font-semibold tracking-tight sm:text-3xl">
+      {Math.max(0, new Date().getFullYear() - 2024)}
+      <span className="text-[#F59E0B]">+</span>
+    </p>
 
-        <div>
-          <div className="text-[24px] font-semibold tracking-[-0.04em]">
-            {String(projects.length).padStart(2, "0")}
-            <span className="text-[#F59E0B]">+</span>
-          </div>
-          <p className="mt-1 text-[9px] uppercase tracking-[0.15em] text-white/30">
-            {isID ? "Project Dibangun" : "Projects Built"}
-          </p>
-        </div>
-
-        <div className="h-8 w-px bg-white/10" />
-
-        <div>
-          <div className="text-[24px] font-semibold tracking-[-0.04em]">
-            Software
-          </div>
-          <p className="mt-1 text-[9px] uppercase tracking-[0.15em] text-white/30">
-            {isID ? "Digital Solutions" : "Digital Solutions"}
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-      {/* INTRODUCTION */}
-      <section className="bg-white py-20 md:py-28 lg:py-32">
-        <div className="mx-auto max-w-[1180px] px-6 md:px-10">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-20">
-            <div className="lg:col-span-4">
-              <SectionLabel>
-                {isID ? "Yang Telah Kami Bangun" : "What We Have Built"}
-              </SectionLabel>
+              <p className="mt-2 text-[10px] uppercase tracking-[0.16em] text-neutral-400 sm:text-[11px]">
+                {isID ? "Tahun Pengalaman" : "Years of Experience"}
+              </p>
             </div>
 
-            <div className="lg:col-span-8">
-              <p className="max-w-[850px] text-[28px] font-medium leading-[1.25] tracking-[-0.035em] md:text-[40px]">
-                {isID ? (
-                  <>
-                    Dari sistem bisnis hingga program untuk institusi,
-                    kami membangun{" "}
-                    <span className="text-gray-400">
-                      project yang dirancang untuk kebutuhan nyata.
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    From business systems to institutional programs, we build{" "}
-                    <span className="text-gray-400">
-                      projects designed around real-world needs.
-                    </span>
-                  </>
-                )}
+            <div>
+              <p className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                {String(projects.length).padStart(2, "0")}
+                <span className="text-[#F59E0B]">+</span>
+              </p>
+
+              <p className="mt-2 text-[10px] uppercase tracking-[0.16em] text-neutral-400 sm:text-[11px]">
+                {isID ? "Proyek Dikerjakan" : "Projects Delivered"}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                Software
+              </p>
+
+              <p className="mt-2 text-[10px] uppercase tracking-[0.16em] text-neutral-400 sm:text-[11px]">
+                {isID ? "Solusi Digital" : "Digital Solutions"}
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* PROJECT LIST */}
-      <section className="bg-[#F7F7F6] py-20 md:py-28 lg:py-32">
-        <div className="mx-auto max-w-[1180px] px-6 md:px-10">
-          {/* HEADER */}
-          <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-            <div>
-              <SectionLabel>
-                {isID ? "Daftar Project" : "Project List"}
-              </SectionLabel>
+      {/* INTRODUCTION SECTION */}
+      <section className="px-6 py-14 sm:px-10 sm:py-16 md:px-14 md:py-20 lg:px-20 lg:py-24 xl:px-24">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-8 md:grid-cols-[0.8fr_1.2fr] md:gap-12 lg:gap-20">
+          <div>
+            <SectionLabel>
+              {isID ? "Tentang Pekerjaan Kami" : "About Our Work"}
+            </SectionLabel>
 
-              <h2 className="mt-6 max-w-[750px] text-[42px] font-semibold leading-[1.04] tracking-[-0.045em] md:text-[58px]">
-                {isID ? (
-                  <>
-                    Project yang telah{" "}
-                    <span className="text-[#F59E0B]">
-                      berhasil kami kerjakan.
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    Projects we have{" "}
-                    <span className="text-[#F59E0B]">
-                      successfully delivered.
-                    </span>
-                  </>
-                )}
-              </h2>
-            </div>
-
-            <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-gray-400">
-              {String(filteredProjects.length).padStart(2, "0")}{" "}
-              {isID ? "PROJECT" : "PROJECTS"}
-            </div>
+            <h2 className="mt-5 max-w-md text-2xl font-semibold leading-tight tracking-tight sm:text-3xl md:text-4xl">
+              {isID ? (
+                <>
+                  Teknologi yang
+                  <br />
+                  memberikan <span className="text-[#F59E0B]">dampak.</span>
+                </>
+              ) : (
+                <>
+                  Technology that
+                  <br />
+                  makes an <span className="text-[#F59E0B]">impact.</span>
+                </>
+              )}
+            </h2>
           </div>
 
-          {/* FILTER */}
-          <div className="mt-12 flex flex-wrap items-center gap-2 border-b border-black/10 pb-6">
-            {(["All", "Software", "Government"] as const).map(
-              (category) => {
-                const isActive = activeCategory === category;
+          <div className="flex flex-col justify-center">
+            <p className="text-sm leading-7 text-neutral-600 sm:text-base sm:leading-8">
+              {isID
+                ? "Kami menghadirkan solusi digital yang dirancang untuk menjawab tantangan nyata. Setiap proyek menjadi kesempatan untuk menggabungkan kebutuhan bisnis, pengalaman pengguna, dan teknologi yang tepat."
+                : "We deliver digital solutions designed to address real challenges. Every project is an opportunity to combine business needs, user experience, and the right technology."}
+            </p>
+
+            <p className="mt-5 text-sm leading-7 text-neutral-600 sm:text-base sm:leading-8">
+              {isID
+                ? "Dari pengembangan perangkat lunak hingga solusi untuk sektor pemerintahan, kami berfokus pada kualitas, fungsionalitas, dan hasil yang berkelanjutan."
+                : "From software development to government-sector solutions, we focus on quality, functionality, and sustainable results."}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* PROJECT LIST SECTION */}
+      <section className="bg-white px-6 py-14 sm:px-10 sm:py-16 md:px-14 md:py-20 lg:px-20 lg:py-24 xl:px-24">
+        <div className="mx-auto max-w-[1440px]">
+          {/* SECTION HEADER */}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <SectionLabel>
+                {isID ? "Karya Pilihan" : "Selected Work"}
+              </SectionLabel>
+
+              <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
+                {isID ? "Proyek Kami" : "Our Projects"}
+                <span className="text-[#F59E0B]">.</span>
+              </h2>
+
+              <p className="mt-3 max-w-xl text-sm leading-7 text-neutral-500">
+                {isID
+                  ? "Lihat solusi dan pengalaman yang kami bangun bersama klien."
+                  : "Discover the solutions and experiences we have built with our clients."}
+              </p>
+            </div>
+
+            <p className="text-xs text-neutral-500">
+              {filteredProjects.length}{" "}
+              {isID ? "proyek ditampilkan" : "projects shown"}
+            </p>
+          </div>
+
+          {/* FILTER BUTTONS */}
+          <div className="mt-8 flex flex-wrap gap-2 border-b border-black/10 pb-5">
+            {(["All", "SOFTWARE", "GOVERNMENT"] as ActiveType[]).map(
+              (type) => {
+                const isActive = activeType === type;
 
                 const label =
-                  category === "All"
+                  type === "All"
                     ? isID
-                      ? "Semua"
-                      : "All"
-                    : category === "Government"
-                      ? isID
-                        ? "Pemerintah"
-                        : "Government"
-                      : "Software";
+                      ? "Semua Proyek"
+                      : "All Projects"
+                    : type === "SOFTWARE"
+                      ? "Software"
+                      : isID
+                        ? "Pemerintahan"
+                        : "Government";
 
                 return (
                   <button
-                    key={category}
+                    key={type}
                     type="button"
-                    onClick={() => setActiveCategory(category)}
-                    className={`
-                      rounded-full
-                      border
-                      px-5
-                      py-2.5
-                      text-[10px]
-                      font-bold
-                      uppercase
-                      tracking-[0.14em]
-                      transition-all
-                      duration-300
-                      ${
-                        isActive
-                          ? "border-[#F59E0B] bg-[#F59E0B] text-white"
-                          : "border-black/10 bg-white text-black/40 hover:border-[#F59E0B]/40 hover:text-black"
-                      }
-                    `}
+                    onClick={() => setActiveType(type)}
+                    aria-pressed={isActive}
+                    className={`rounded-full border px-4 py-2 text-[11px] font-medium transition-colors duration-200 sm:text-xs ${
+                      isActive
+                        ? "border-[#F59E0B] bg-[#F59E0B] text-black"
+                        : "border-black/10 bg-white text-neutral-600 hover:border-[#F59E0B] hover:text-neutral-900"
+                    }`}
                   >
                     {label}
                   </button>
@@ -306,126 +304,185 @@ function ProjectsContent() {
             )}
           </div>
 
-          {/* PROJECT GRID */}
-          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredProjects.map((project) => (
-              <article
-                key={project.id}
-                className="
-                  group
-                  overflow-hidden
-                  rounded-[20px]
-                  border
-                  border-black/10
-                  bg-white
-                  transition-all
-                  duration-500
-                  hover:-translate-y-1
-                  hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)]
-                "
-              >
-                {/* IMAGE */}
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="
-                      h-full
-                      w-full
-                      object-cover
-                      transition-transform
-                      duration-700
-                      ease-out
-                      group-hover:scale-105
-                    "
-                  />
+          {/* LOADING STATE */}
+          {loading && (
+            <div
+              className="mt-9 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              aria-label={isID ? "Memuat proyek" : "Loading projects"}
+              aria-busy="true"
+            >
+              {Array.from({ length: 8 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="overflow-hidden rounded-lg border border-black/5 bg-white"
+                >
+                  <div className="aspect-[16/10] animate-pulse bg-neutral-200" />
 
-                  {/* OVERLAY */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-70" />
-
-                  {/* CATEGORY */}
-                  <div className="absolute left-5 top-5">
-                    <span className="rounded-full border border-white/20 bg-black/20 px-3 py-2 text-[9px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-md">
-                      {project.category === "Government"
-                        ? isID
-                          ? "Pemerintah"
-                          : "Government"
-                        : "Software"}
-                    </span>
-                  </div>
-
-                  {/* NUMBER */}
-                  <div className="absolute bottom-5 right-5">
-                    <span className="text-[10px] font-bold tracking-[0.16em] text-white/60">
-                      {String(project.id).padStart(2, "0")}
-                    </span>
+                  <div className="space-y-3 p-3.5">
+                    <div className="h-3 w-1/3 animate-pulse rounded bg-neutral-200" />
+                    <div className="h-4 w-3/4 animate-pulse rounded bg-neutral-200" />
+                    <div className="h-3 w-full animate-pulse rounded bg-neutral-200" />
+                    <div className="h-3 w-2/3 animate-pulse rounded bg-neutral-200" />
                   </div>
                 </div>
-
-                {/* CONTENT */}
-                <div className="p-6 md:p-7">
-                  <h3 className="text-[23px] font-semibold leading-[1.15] tracking-[-0.035em]">
-                    {project.title}
-                  </h3>
-
-                  <p className="mt-4 line-clamp-3 text-[12px] leading-6 text-black/40">
-                    {project.description}
-                  </p>
-
-                  {/* SEE MORE */}
-                  <button
-                    type="button"
-                    className="
-                      mt-7
-                      flex
-                      items-center
-                      gap-3
-                      text-[10px]
-                      font-bold
-                      uppercase
-                      tracking-[0.15em]
-                      text-[#171717]
-                      transition-colors
-                      duration-300
-                      group-hover:text-[#F59E0B]
-                    "
-                  >
-                    <span>
-                      {isID ? "Lihat Detail" : "See More"}
-                    </span>
-
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full border border-black/10 transition-all duration-300 group-hover:border-[#F59E0B] group-hover:bg-[#F59E0B] group-hover:text-white">
-                      →
-                    </span>
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          {/* BOTTOM STATEMENT */}
-          <div className="mt-16 flex flex-col justify-between gap-6 border-t border-black/10 pt-8 md:flex-row md:items-center">
-            <div className="flex items-center gap-3">
-              <span className="h-2 w-2 rounded-full bg-[#F59E0B]" />
-
-              <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-black/30">
-                IFTECH SOLUSINDO
-              </span>
+              ))}
             </div>
+          )}
 
-            <p className="max-w-[420px] text-[11px] leading-6 text-black/30 md:text-right">
-              {isID
-                ? "Setiap project mencerminkan pengalaman kami dalam membangun dan mengembangkan sistem digital."
-                : "Every project reflects our experience in building and developing digital systems."}
-            </p>
-          </div>
+          {/* ERROR STATE */}
+          {!loading && error && (
+            <div
+              className="mt-9 rounded-xl border border-red-200 bg-white px-5 py-10 text-center"
+              role="alert"
+            >
+              <p className="text-sm text-red-600">{error}</p>
+
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="mt-5 rounded-full bg-neutral-900 px-5 py-2.5 text-xs font-medium text-white transition hover:bg-neutral-700"
+              >
+                {isID ? "Coba Lagi" : "Try Again"}
+              </button>
+            </div>
+          )}
+
+          {/* EMPTY STATE */}
+          {!loading && !error && filteredProjects.length === 0 && (
+            <div className="mt-9 rounded-xl border border-black/10 bg-white px-5 py-14 text-center">
+              <p className="text-base font-medium text-neutral-800">
+                {isID ? "Belum ada proyek" : "No projects yet"}
+              </p>
+
+              <p className="mt-3 text-sm leading-6 text-neutral-500">
+                {isID
+                  ? "Proyek untuk kategori ini belum tersedia."
+                  : "There are no projects available in this category yet."}
+              </p>
+            </div>
+          )}
+
+          {/* PROJECT CARDS */}
+          {!loading && !error && filteredProjects.length > 0 && (
+            <div className="mt-9 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:gap-6">
+              {filteredProjects.map((project) => (
+                <article
+                  key={project.id}
+                  className="group flex h-full min-w-0 flex-col overflow-hidden rounded-lg border border-black/[0.07] bg-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+                >
+                  {/* CARD IMAGE */}
+                  <a
+                    href={`/projects/${project.slug}`}
+                    aria-label={
+                      isID
+                        ? `Lihat detail ${project.title}`
+                        : `View ${project.title} details`
+                    }
+                    className="relative block aspect-[16/10] overflow-hidden bg-neutral-200"
+                  >
+                    {project.imageUrl ? (
+                      <img
+                        src={project.imageUrl}
+                        alt={project.title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <span className="text-[10px] uppercase tracking-wider text-neutral-400">
+                          {isID ? "Gambar Proyek" : "Project Image"}
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+
+                    <span className="absolute left-2.5 top-2.5 rounded-full bg-white/95 px-2 py-1 text-[8px] font-semibold uppercase tracking-wider text-neutral-800">
+                      {getTypeLabel(project.type)}
+                    </span>
+
+                    {project.year && (
+                      <span className="absolute bottom-2.5 right-2.5 text-[10px] font-medium text-white">
+                        {project.year}
+                      </span>
+                    )}
+                  </a>
+
+                  {/* CARD CONTENT */}
+                  <div className="flex flex-1 flex-col p-3 sm:p-3.5">
+                    {project.client && (
+                      <p className="mb-1.5 line-clamp-1 text-[9px] font-medium uppercase tracking-wider text-neutral-400">
+                        {project.client}
+                      </p>
+                    )}
+
+                    <h3 className="line-clamp-2 min-h-[2.5rem] text-sm font-semibold leading-5 tracking-tight text-neutral-900 transition-colors group-hover:text-[#B77900]">
+                      {project.title}
+                    </h3>
+
+                    <p className="mt-2 line-clamp-3 min-h-[3.75rem] text-[11px] leading-5 text-neutral-500">
+                      {project.projectDetails ||
+                        (isID
+                          ? "Pelajari solusi digital yang dikembangkan dalam proyek ini."
+                          : "Discover the digital solution developed for this project.")}
+                    </p>
+
+                    {/* TECHNOLOGY TAGS */}
+                    {project.technologies &&
+                      project.technologies.length > 0 && (
+                        <div className="mt-2.5 flex flex-wrap gap-1">
+                          {project.technologies
+                            .slice(0, 2)
+                            .map((technology, index) => (
+                              <span
+                                key={`${technology.name}-${index}`}
+                                className="max-w-full truncate rounded bg-neutral-100 px-1.5 py-1 text-[8px] font-medium text-neutral-600"
+                              >
+                                {technology.name}
+                              </span>
+                            ))}
+
+                          {project.technologies.length > 2 && (
+                            <span className="rounded bg-neutral-100 px-1.5 py-1 text-[8px] font-medium text-neutral-500">
+                              +{project.technologies.length - 2}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                    {/* CARD FOOTER */}
+                    <div className="mt-auto pt-3">
+                      <a
+                        href={`/projects/${project.slug}`}
+                        className="inline-flex items-center gap-1.5 border-b border-[#F59E0B] pb-1 text-[10px] font-semibold text-neutral-800 transition-colors hover:text-[#B77900]"
+                      >
+                        {isID ? "Lihat Detail" : "View Details"}
+
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5"
+                        >
+                          <path
+                            d="M4 10H16M10 4L16 10L10 16"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* CTA */}
       <CTA />
-
-      {/* FOOTER */}
       <Footer />
     </main>
   );
