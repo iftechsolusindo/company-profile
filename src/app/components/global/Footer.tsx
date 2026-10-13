@@ -219,44 +219,52 @@ export default function Footer() {
               : "All rights reserved."}
           </div>
 
-          {/* Social Media */}
-          <div className="flex items-center gap-2">
-            {/* LinkedIn */}
-            <a
-              href="#"
-              aria-label="LinkedIn"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DDDDDD] text-[10px] font-bold text-[#777777] transition-all duration-200 hover:border-[#F59E0B] hover:bg-[#F59E0B] hover:text-white"
-            >
-              in
-            </a>
+         {/* Social Media */}
+<div className="flex items-center gap-2">
+  {/* LinkedIn */}
+  <a
+    href="https://id.linkedin.com/company/iftech-solusindo"
+    aria-label="LinkedIn"
+    className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DDDDDD] text-[#777777] transition-all duration-200 hover:border-[#F59E0B] hover:bg-[#F59E0B] hover:text-white"
+  >
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="h-4 w-4"
+    >
+      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14ZM8.34 10.12H5.67V18h2.67v-7.88ZM7 6a1.55 1.55 0 1 0 0 3.1A1.55 1.55 0 0 0 7 6Zm11.33 7.48c0-2.37-1.27-3.48-2.96-3.48a2.57 2.57 0 0 0-2.32 1.28v-1.16h-2.67V18h2.67v-4.14c0-1.09.2-2.14 1.56-2.14 1.34 0 1.36 1.24 1.36 2.21V18h2.36v-4.52Z" />
+    </svg>
+  </a>
 
-            {/* Instagram */}
-            <a
-              href="#"
-              aria-label="Instagram"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DDDDDD] text-sm text-[#777777] transition-all duration-200 hover:border-[#F59E0B] hover:bg-[#F59E0B] hover:text-white"
-            >
-              ◎
-            </a>
-
-            {/* Facebook */}
-            <a
-              href="#"
-              aria-label="Facebook"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DDDDDD] text-xs font-bold text-[#777777] transition-all duration-200 hover:border-[#F59E0B] hover:bg-[#F59E0B] hover:text-white"
-            >
-              f
-            </a>
-
-            {/* X */}
-            <a
-              href="#"
-              aria-label="X"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DDDDDD] text-[10px] font-bold text-[#777777] transition-all duration-200 hover:border-[#F59E0B] hover:bg-[#F59E0B] hover:text-white"
-            >
-              X
-            </a>
-          </div>
+  {/* Instagram */}
+  <a
+    href="https://instagram.com/iftechsolusindo?obrf=MWFmZGI2cXhmZ25yYg%3D%3D"
+    aria-label="Instagram"
+    className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DDDDDD] text-[#777777] transition-all duration-200 hover:border-[#F59E0B] hover:bg-[#F59E0B] hover:text-white"
+  >
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle
+        cx="17.5"
+        cy="6.5"
+        r="1"
+        fill="currentColor"
+        stroke="none"
+      />
+    </svg>
+  </a>
+</div>
         </div>
       </div>
     </footer>

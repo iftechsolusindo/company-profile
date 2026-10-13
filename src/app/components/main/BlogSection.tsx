@@ -42,7 +42,8 @@ export default function BlogSection() {
           );
         }
 
-        setBlogPosts((data.blogs ?? []).slice(0, 3));
+        // Tampilkan maksimal 4 artikel terbaru.
+        setBlogPosts((data.blogs ?? []).slice(0, 4));
       } catch (error) {
         console.error("Failed to fetch blogs:", error);
         setBlogPosts([]);
@@ -63,33 +64,34 @@ export default function BlogSection() {
   }
 
   return (
-    <section className="w-full bg-white py-16 font-sans">
+    <section className="w-full bg-white py-8 font-sans sm:py-12 md:py-14">
       <div className="container-main">
         {/* Header */}
-        <div className="mb-8 flex items-end justify-between">
-          <div>
-            {/* Label */}
-            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[#F59E0B]">
+        <div className="mb-6 flex items-end justify-between gap-3 sm:mb-6 sm:gap-4">
+          <div className="min-w-0">
+            <p className="mb-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-[#F59E0B] sm:mb-2 sm:text-[10px]">
               Blog
             </p>
 
-            {/* Title */}
-            <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-[#113a5d] md:text-4xl">
+            <h2 className="text-xl font-extrabold leading-tight tracking-tight text-[#113a5d] sm:text-3xl md:text-4xl">
               Berita terbaru hari ini
             </h2>
           </div>
 
           <Link
             href="/blogs"
-            className="group flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-[0_3px_12px_-5px_rgba(0,0,0,0.15)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#F59E0B]/40 hover:text-[#B45309] hover:shadow-[0_6px_18px_-6px_rgba(0,0,0,0.2)]"
+            className="group flex shrink-0 items-center rounded-full border border-gray-200 bg-white px-2.5 py-2 text-[10px] font-semibold text-gray-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#F59E0B]/40 hover:text-[#B45309] hover:shadow-md sm:px-4 sm:text-sm"
           >
-            View All Articles
+            <span className="whitespace-nowrap">
+              View All Articles
+            </span>
 
             <svg
-              className="ml-2 h-4 w-4 text-gray-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-[#F59E0B]"
+              className="ml-1.5 h-3 w-3 text-gray-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-[#F59E0B] sm:ml-2 sm:h-4 sm:w-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -101,22 +103,22 @@ export default function BlogSection() {
           </Link>
         </div>
 
-        {/* Loading */}
+        {/* Loading Skeleton */}
         {loading && (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((item) => (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+            {[1, 2, 3, 4].map((item) => (
               <div
                 key={item}
-                className="h-[480px] animate-pulse rounded-2xl border border-gray-100 bg-gray-100 shadow-[0_8px_25px_-12px_rgba(0,0,0,0.2)]"
+                className="h-[360px] animate-pulse overflow-hidden rounded-xl border border-gray-100 bg-gray-100 shadow-sm sm:h-[340px]"
               />
             ))}
           </div>
         )}
 
-        {/* Empty */}
+        {/* Empty State */}
         {!loading && blogPosts.length === 0 && (
-          <div className="rounded-2xl border border-gray-200 bg-gray-50 px-6 py-12 text-center shadow-[0_8px_25px_-15px_rgba(0,0,0,0.15)]">
-            <p className="text-sm font-medium text-gray-500">
+          <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-8 text-center sm:px-6 sm:py-10">
+            <p className="text-xs font-medium text-gray-500 sm:text-sm">
               No blog articles available.
             </p>
           </div>
@@ -124,62 +126,63 @@ export default function BlogSection() {
 
         {/* Blog Cards */}
         {!loading && blogPosts.length > 0 && (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
             {blogPosts.map((post) => (
               <Link
                 key={post.id}
                 href={`/blog/${post.slug}`}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_8px_25px_-12px_rgba(0,0,0,0.22)] transition-all duration-300 hover:-translate-y-1 hover:border-gray-300 hover:shadow-[0_16px_35px_-12px_rgba(0,0,0,0.28)]"
+                className="group flex min-w-0 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_4px_16px_-8px_rgba(0,0,0,0.18)] transition-all duration-300 hover:-translate-y-1 hover:border-gray-300 hover:shadow-[0_12px_24px_-10px_rgba(0,0,0,0.22)]"
               >
                 {/* Image */}
-                <div className="relative h-52 w-full shrink-0 overflow-hidden bg-gray-100">
+                <div className="relative h-52 w-full shrink-0 overflow-hidden bg-gray-100 sm:h-40">
                   {post.imageUrl ? (
                     <>
                       <img
                         src={post.imageUrl}
                         alt={post.title}
+                        loading="lazy"
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
 
                       {/* Image Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-90" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-100" />
 
                       {/* Image Label */}
-                      <div className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#113a5d] shadow-sm">
+                      <div className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-[#113a5d] shadow-sm">
                         Blog
                       </div>
                     </>
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-gray-100 text-sm font-medium text-gray-400">
+                    <div className="flex h-full w-full items-center justify-center bg-gray-100 text-xs font-medium text-gray-400">
                       No Image
                     </div>
                   )}
                 </div>
 
                 {/* Content */}
-                <div className="flex flex-grow flex-col p-6">
+                <div className="flex flex-grow flex-col p-5 sm:p-4">
                   {/* Date */}
-                  <div className="mb-3 flex items-center gap-2 text-[12px] font-semibold text-gray-400">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#F59E0B]" />
+                  <div className="mb-2.5 flex items-center gap-2 text-[10px] font-semibold text-gray-400 sm:mb-2 sm:text-[10px]">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F59E0B]" />
 
-                    {formatDate(post.updatedAt)}
+                    <span>{formatDate(post.updatedAt)}</span>
                   </div>
 
                   {/* Title */}
-                  <h3 className="mb-3 line-clamp-2 text-xl font-extrabold leading-snug tracking-tight text-[#0a1752] transition-colors duration-300 group-hover:text-[#B45309]">
+                  <h3 className="mb-2.5 line-clamp-2 text-lg font-extrabold leading-snug tracking-tight text-[#0a1752] transition-colors duration-300 group-hover:text-[#B45309] sm:mb-2 sm:text-base">
                     {post.title}
                   </h3>
 
                   {/* Excerpt */}
-                  <p className="mb-6 line-clamp-3 flex-grow text-sm font-medium leading-relaxed text-gray-500">
+                  <p className="mb-4 line-clamp-3 flex-grow text-sm font-medium leading-relaxed text-gray-500 sm:mb-4 sm:text-xs">
                     {post.excerpt || "Read this article to learn more."}
                   </p>
 
                   {/* Read More */}
-                  <div className="mt-auto flex items-center justify-end border-t border-gray-100 pt-4">
-                    <span className="flex items-center gap-2 text-sm font-bold text-[#113a5d] transition-all duration-300 group-hover:gap-3 group-hover:text-[#B45309]">
+                  <div className="mt-auto flex items-center justify-end border-t border-gray-100 pt-3">
+                    <span className="flex items-center gap-2 text-xs font-bold text-[#113a5d] transition-all duration-300 group-hover:gap-3 group-hover:text-[#B45309] sm:text-xs">
                       Read More
-                      <span className="text-base">→</span>
+                      <span className="text-sm">→</span>
                     </span>
                   </div>
                 </div>

@@ -201,7 +201,7 @@ function ContactContent() {
               <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
                 {/* EMAIL */}
                 <a
-                  href="mailto:info@iftechsolusindo.com"
+                  href="mailto:iftechsolusindo@gmail.com"
                   className="group flex min-w-0 items-start gap-4 rounded-xl border border-white/10 bg-white/[0.04] p-4 transition-colors duration-300 hover:border-[#F59E0B]/50 hover:bg-white/[0.07] sm:p-5"
                 >
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#F59E0B]/10 text-[#F59E0B]">
@@ -230,7 +230,7 @@ function ContactContent() {
                     </p>
 
                     <p className="mt-2 break-words text-xs font-medium text-white transition-colors group-hover:text-[#F59E0B] sm:text-sm">
-                      info@iftechsolusindo.com
+                      iftechsolusindo@gmail.com
                     </p>
                   </div>
                 </a>
@@ -260,7 +260,7 @@ function ContactContent() {
                     </p>
 
                     <p className="mt-2 text-xs font-medium text-white sm:text-sm">
-                      +62 xxx xxxx xxxx
+                     0851-7432-0326
                     </p>
                   </div>
                 </div>
@@ -287,7 +287,10 @@ function ContactContent() {
                     </p>
 
                     <p className="mt-2 text-xs font-medium leading-5 text-white sm:text-sm">
-                      Yogyakarta, Indonesia
+                      Perumahan Arga Jaya Jalan Wilis CXVIII,
+RT.06/RW.3, Maliyan, Kalinegoro,
+Kec. Mertoyudan, Kabupaten Magelang,
+Jawa Tengah 56172
                     </p>
                   </div>
                 </div>

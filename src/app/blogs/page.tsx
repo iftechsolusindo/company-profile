@@ -39,7 +39,7 @@ function BlogCard({
   ).format(new Date(blog.updatedAt));
 
   return (
-    <article className="group flex min-w-0 flex-col overflow-hidden rounded-xl border border-black/[0.07] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#F59E0B]/40 hover:shadow-[0_18px_45px_rgba(0,0,0,0.07)] sm:flex-row">
+    <article className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#F59E0B]/40 hover:shadow-[0_16px_40px_rgba(0,0,0,0.07)] sm:flex-row">
       {/* IMAGE */}
       <a
         href={`/blogs/${blog.slug}`}
@@ -48,7 +48,7 @@ function BlogCard({
             ? `Baca artikel ${blog.title}`
             : `Read article ${blog.title}`
         }
-        className="relative block aspect-[16/10] shrink-0 overflow-hidden bg-[#F0F0ED] sm:aspect-auto sm:w-[40%]"
+        className="relative block aspect-[16/9] w-full shrink-0 overflow-hidden bg-[#F0F0ED] sm:aspect-auto sm:w-[38%] md:w-[40%]"
       >
         {blog.imageUrl ? (
           <img
@@ -59,10 +59,11 @@ function BlogCard({
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex flex-col items-center gap-3">
-              <span className="text-2xl font-semibold tracking-tight text-black/10">
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-2xl font-semibold tracking-tight text-black/10 sm:text-3xl">
                 IFTECH
               </span>
+
               <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-black/30">
                 {isID ? "Artikel" : "Article"}
               </span>
@@ -70,18 +71,18 @@ function BlogCard({
           </div>
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-40" />
 
-        <span className="absolute left-3 top-3 rounded-full border border-white/30 bg-black/40 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-white backdrop-blur-sm">
+        <span className="absolute left-3 top-3 rounded-full border border-white/30 bg-black/40 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-white backdrop-blur-sm sm:left-4 sm:top-4">
           IFTECH Journal
         </span>
       </a>
 
       {/* CONTENT */}
-      <div className="flex min-w-0 flex-1 flex-col p-5 sm:p-5 md:p-6">
+      <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5 md:p-6">
         {/* META */}
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <span className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[0.15em] text-[#B77900]">
+          <span className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[0.13em] text-[#B77900] sm:text-[10px] sm:tracking-[0.15em]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#F59E0B]" />
             Blog
           </span>
@@ -90,19 +91,19 @@ function BlogCard({
 
           <time
             dateTime={blog.updatedAt}
-            className="text-[10px] text-neutral-400"
+            className="text-[10px] text-neutral-400 sm:text-[11px]"
           >
             {formattedDate}
           </time>
         </div>
 
         {/* TITLE */}
-        <h2 className="mt-4 line-clamp-2 text-lg font-semibold leading-snug tracking-tight text-[#171717] transition-colors duration-300 group-hover:text-[#B77900] md:text-xl">
+        <h2 className="mt-3 line-clamp-2 text-lg font-semibold leading-snug tracking-tight text-[#171717] transition-colors duration-300 group-hover:text-[#B77900] sm:mt-4 sm:text-lg md:text-xl">
           {blog.title}
         </h2>
 
         {/* EXCERPT */}
-        <p className="mt-3 line-clamp-3 text-xs leading-6 text-neutral-500">
+        <p className="mt-2 line-clamp-3 text-[13px] leading-6 text-neutral-500 sm:mt-3 sm:text-xs sm:leading-6">
           {blog.excerpt ||
             (isID
               ? "Jelajahi insight dan informasi terbaru dari IFTECH Solusindo."
@@ -110,14 +111,14 @@ function BlogCard({
         </p>
 
         {/* FOOTER */}
-        <div className="mt-auto flex items-center justify-between gap-3 border-t border-black/[0.06] pt-4 mt-5">
-          <span className="text-[9px] font-medium uppercase tracking-[0.12em] text-neutral-400">
+        <div className="mt-5 flex items-center justify-between gap-3 border-t border-black/[0.06] pt-4 sm:mt-auto sm:pt-4">
+          <span className="min-w-0 truncate text-[9px] font-medium uppercase tracking-[0.08em] text-neutral-400 sm:text-[10px] sm:tracking-[0.12em]">
             IFTECH SOLUSINDO
           </span>
 
           <a
             href={`/blogs/${blog.slug}`}
-            className="inline-flex shrink-0 items-center gap-2 text-[10px] font-semibold text-neutral-800 transition-colors hover:text-[#B77900]"
+            className="inline-flex shrink-0 items-center gap-2 text-[10px] font-semibold text-neutral-800 transition-colors hover:text-[#B77900] sm:text-[11px]"
           >
             {isID ? "Baca Artikel" : "Read Article"}
 
@@ -144,19 +145,20 @@ function BlogCard({
 
 function BlogSkeleton() {
   return (
-    <div className="flex min-w-0 animate-pulse flex-col overflow-hidden rounded-xl border border-black/[0.06] bg-white sm:flex-row">
-      <div className="aspect-[16/10] shrink-0 bg-neutral-200 sm:aspect-auto sm:w-[40%]" />
+    <div className="flex min-w-0 animate-pulse flex-col overflow-hidden rounded-2xl border border-black/[0.06] bg-white sm:flex-row">
+      <div className="aspect-[16/9] w-full shrink-0 bg-neutral-200 sm:aspect-auto sm:w-[38%] md:w-[40%]" />
 
-      <div className="flex flex-1 flex-col p-5 md:p-6">
+      <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5 md:p-6">
         <div className="h-3 w-24 rounded bg-neutral-200" />
-        <div className="mt-5 h-5 w-full rounded bg-neutral-200" />
+
+        <div className="mt-4 h-5 w-full rounded bg-neutral-200" />
         <div className="mt-2 h-5 w-3/4 rounded bg-neutral-200" />
 
-        <div className="mt-5 h-3 w-full rounded bg-neutral-100" />
+        <div className="mt-4 h-3 w-full rounded bg-neutral-100" />
         <div className="mt-2 h-3 w-full rounded bg-neutral-100" />
         <div className="mt-2 h-3 w-2/3 rounded bg-neutral-100" />
 
-        <div className="mt-7 flex justify-between border-t border-black/[0.06] pt-4">
+        <div className="mt-5 flex justify-between gap-3 border-t border-black/[0.06] pt-4 sm:mt-auto">
           <div className="h-3 w-24 rounded bg-neutral-100" />
           <div className="h-3 w-20 rounded bg-neutral-200" />
         </div>
@@ -225,22 +227,18 @@ function BlogsContent() {
   }, [isID]);
 
   const filteredBlogs = useMemo(() => {
-    const searchValue = search.trim().toLocaleLowerCase(
-      isID ? "id-ID" : "en-US",
-    );
+    const locale = isID ? "id-ID" : "en-US";
+    const searchValue = search.trim().toLocaleLowerCase(locale);
 
     if (!searchValue) {
       return blogs;
     }
 
     return blogs.filter((blog) => {
-      const title = blog.title.toLocaleLowerCase(
-        isID ? "id-ID" : "en-US",
+      const title = blog.title.toLocaleLowerCase(locale);
+      const excerpt = (blog.excerpt || "").toLocaleLowerCase(
+        locale,
       );
-
-      const excerpt = (
-        blog.excerpt || ""
-      ).toLocaleLowerCase(isID ? "id-ID" : "en-US");
 
       return (
         title.includes(searchValue) ||
@@ -250,32 +248,32 @@ function BlogsContent() {
   }, [blogs, search, isID]);
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#F7F7F5] text-[#171717]">
+    <main className="min-h-screen overflow-x-clip bg-[#F7F7F5] text-[#171717]">
       <NavbarMain />
 
-      {/* HERO SECTION */}
+      {/* =====================================================
+          HERO SECTION
+      ===================================================== */}
       <section className="relative overflow-hidden border-b border-black/[0.07] bg-white">
         {/* DECORATIVE ELEMENTS */}
-        <div className="pointer-events-none absolute -right-24 -top-28 h-80 w-80 rounded-full border border-black/[0.035] sm:h-96 sm:w-96" />
+        <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full border border-black/[0.035] sm:-right-24 sm:-top-28 sm:h-80 sm:w-80 md:h-96 md:w-96" />
 
-        <div className="pointer-events-none absolute -right-10 -top-14 h-60 w-60 rounded-full border border-black/[0.04] sm:h-72 sm:w-72" />
+        <div className="pointer-events-none absolute -right-8 -top-10 h-40 w-40 rounded-full border border-black/[0.04] sm:-right-10 sm:-top-14 sm:h-60 sm:w-60 md:h-72 md:w-72" />
 
-        <div className="pointer-events-none absolute -bottom-20 left-[42%] h-52 w-52 rounded-full bg-[#F59E0B]/[0.07] blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-16 left-[35%] h-40 w-40 rounded-full bg-[#F59E0B]/[0.07] blur-3xl sm:-bottom-20 sm:left-[42%] sm:h-52 sm:w-52" />
 
-        <div className="relative mx-auto max-w-[1440px] px-6 pb-10 pt-28 sm:px-10 sm:pb-12 sm:pt-32 md:px-14 md:pb-14 md:pt-36 lg:px-20 xl:px-24">
-          <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-[1fr_auto] md:gap-10">
+        <div className="relative mx-auto max-w-[1440px] px-5 pb-8 pt-24 sm:px-8 sm:pb-10 sm:pt-28 md:px-14 md:pb-14 md:pt-36 lg:px-20 xl:px-24">
+          <div className="grid grid-cols-1 items-end gap-6 sm:gap-8 md:grid-cols-[1fr_auto] md:gap-10">
             <div className="max-w-4xl">
               {/* EYEBROW */}
-              <div className="mb-5 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
+              <div className="mb-4 flex flex-wrap items-center gap-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-neutral-400 sm:mb-5 sm:gap-3 sm:text-[10px] sm:tracking-[0.18em]">
                 <span>IFTECH SOLUSINDO</span>
-                <span className="h-px w-8 bg-[#F59E0B]" />
-                <span className="text-[#B77900]">
-                  Blogs
-                </span>
+                <span className="h-px w-6 bg-[#F59E0B] sm:w-8" />
+                <span className="text-[#B77900]">Blogs</span>
               </div>
 
               {/* TITLE */}
-              <h1 className="max-w-4xl text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-5xl md:text-6xl lg:text-7xl">
+              <h1 className="max-w-4xl text-[38px] font-semibold leading-[1.08] tracking-[-0.045em] sm:text-5xl md:text-6xl lg:text-7xl">
                 {isID ? (
                   <>
                     Ide besar.
@@ -295,7 +293,7 @@ function BlogsContent() {
                 )}
               </h1>
 
-              <p className="mt-5 max-w-2xl text-sm leading-7 text-neutral-500 sm:text-base sm:leading-8">
+              <p className="mt-4 max-w-2xl text-[13px] leading-6 text-neutral-500 sm:mt-5 sm:text-base sm:leading-8">
                 {isID
                   ? "Temukan wawasan seputar teknologi, pengembangan perangkat lunak, dan transformasi digital untuk membantu bisnis terus berkembang."
                   : "Explore insights on technology, software development, and digital transformation to help businesses move forward."}
@@ -303,22 +301,24 @@ function BlogsContent() {
             </div>
 
             {/* ARTICLE COUNT */}
-            <div className="flex items-center gap-4 border-t border-black/[0.08] pt-5 md:min-w-[170px] md:border-l md:border-t-0 md:pl-7 md:pt-0">
+            <div className="flex items-center gap-4 border-t border-black/[0.08] pt-4 sm:pt-5 md:min-w-[170px] md:border-l md:border-t-0 md:pl-7 md:pt-0">
               <div>
                 <p className="text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">
                   {String(blogs.length).padStart(2, "0")}
                   <span className="text-[#F59E0B]">+</span>
                 </p>
 
-                <p className="mt-2 text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
-                  {isID ? "Artikel dipublikasikan" : "Published articles"}
+                <p className="mt-1.5 text-[9px] font-medium uppercase tracking-[0.13em] text-neutral-400 sm:mt-2 sm:text-[10px] sm:tracking-[0.16em]">
+                  {isID
+                    ? "Artikel dipublikasikan"
+                    : "Published articles"}
                 </p>
               </div>
             </div>
           </div>
 
           {/* BOTTOM ACCENT */}
-          <div className="mt-9 flex items-center gap-2">
+          <div className="mt-6 flex items-center gap-2 sm:mt-9">
             <span className="h-1 w-10 rounded-full bg-[#F59E0B]" />
             <span className="h-1 w-3 rounded-full bg-neutral-200" />
             <span className="h-1 w-3 rounded-full bg-neutral-200" />
@@ -326,24 +326,27 @@ function BlogsContent() {
         </div>
       </section>
 
-      {/* BLOG LIST SECTION */}
-      <section className="mx-auto max-w-[1440px] px-6 py-10 sm:px-10 sm:py-12 md:px-14 md:py-14 lg:px-20 xl:px-24">
+      {/* =====================================================
+          BLOG LIST SECTION
+      ===================================================== */}
+      <section className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 sm:py-10 md:px-14 md:py-14 lg:px-20 xl:px-24">
         {/* SECTION HEADER + SEARCH */}
-        <div className="mb-7 flex flex-col gap-5 border-b border-black/[0.08] pb-6 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-6 flex flex-col gap-5 border-b border-black/[0.08] pb-5 sm:mb-7 sm:gap-5 sm:pb-6 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-[#F59E0B]" />
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
+
+              <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-neutral-400 sm:text-[10px] sm:tracking-[0.18em]">
                 {isID ? "Jelajahi Artikel" : "Explore Articles"}
               </p>
             </div>
 
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
+            <h2 className="mt-2.5 text-2xl font-semibold tracking-tight sm:mt-3 sm:text-3xl">
               {isID ? "Artikel Terbaru" : "Latest Articles"}
               <span className="text-[#F59E0B]">.</span>
             </h2>
 
-            <p className="mt-2 text-xs leading-6 text-neutral-500 sm:text-sm">
+            <p className="mt-1.5 text-xs leading-6 text-neutral-500 sm:mt-2 sm:text-sm">
               {isID
                 ? "Ide, informasi, dan perspektif terbaru dari kami."
                 : "The latest ideas, information, and perspectives from our team."}
@@ -351,10 +354,10 @@ function BlogsContent() {
           </div>
 
           {/* SEARCH */}
-          <div className="relative w-full sm:max-w-[300px]">
+          <div className="w-full md:max-w-[300px] md:flex-shrink-0">
             <label
               htmlFor="blog-search"
-              className="mb-2 block text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-400"
+              className="mb-2 block text-[9px] font-medium uppercase tracking-[0.12em] text-neutral-400 sm:text-[10px]"
             >
               {isID ? "Cari artikel" : "Search articles"}
             </label>
@@ -372,7 +375,7 @@ function BlogsContent() {
                     ? "Ketik judul atau topik..."
                     : "Enter a title or topic..."
                 }
-                className="w-full rounded-lg border border-black/[0.09] bg-white px-4 py-3 pr-11 text-xs text-neutral-800 outline-none transition placeholder:text-neutral-400 focus:border-[#F59E0B] focus:ring-2 focus:ring-[#F59E0B]/10"
+                className="w-full rounded-xl border border-black/[0.09] bg-white px-4 py-3.5 pr-11 text-[13px] text-neutral-800 outline-none transition placeholder:text-neutral-400 focus:border-[#F59E0B] focus:ring-2 focus:ring-[#F59E0B]/10 sm:py-3 sm:text-xs"
               />
 
               <svg
@@ -388,6 +391,7 @@ function BlogsContent() {
                   stroke="currentColor"
                   strokeWidth="1.6"
                 />
+
                 <path
                   d="m16 16 4 4"
                   stroke="currentColor"
@@ -401,8 +405,8 @@ function BlogsContent() {
 
         {/* RESULT COUNT */}
         {!loading && !error && (
-          <div className="mb-5 flex items-center justify-between gap-4">
-            <p className="text-[10px] text-neutral-400">
+          <div className="mb-4 flex items-center justify-between gap-3 sm:mb-5">
+            <p className="text-[10px] leading-5 text-neutral-400 sm:text-[11px]">
               {isID
                 ? `Menampilkan ${filteredBlogs.length} dari ${blogs.length} artikel`
                 : `Showing ${filteredBlogs.length} of ${blogs.length} articles`}
@@ -412,7 +416,7 @@ function BlogsContent() {
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="text-[10px] font-semibold text-neutral-500 transition-colors hover:text-[#B77900]"
+                className="shrink-0 text-[10px] font-semibold text-neutral-500 transition-colors hover:text-[#B77900] sm:text-[11px]"
               >
                 {isID ? "Hapus pencarian" : "Clear search"}
               </button>
@@ -436,7 +440,7 @@ function BlogsContent() {
         {/* ERROR */}
         {!loading && error && (
           <div
-            className="rounded-xl border border-red-200 bg-white px-5 py-12 text-center sm:py-16"
+            className="rounded-2xl border border-red-200 bg-white px-5 py-10 text-center sm:py-16"
             role="alert"
           >
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-500">
@@ -462,14 +466,14 @@ function BlogsContent() {
                 : "Unable to load articles"}
             </h3>
 
-            <p className="mx-auto mt-2 max-w-md text-xs leading-6 text-neutral-500">
+            <p className="mx-auto mt-2 max-w-md text-xs leading-6 text-neutral-500 sm:text-sm">
               {error}
             </p>
 
             <button
               type="button"
               onClick={() => window.location.reload()}
-              className="mt-5 rounded-lg bg-[#171717] px-5 py-3 text-[10px] font-semibold text-white transition hover:bg-[#333333]"
+              className="mt-5 min-h-11 rounded-xl bg-[#171717] px-5 py-3 text-[11px] font-semibold text-white transition hover:bg-[#333333]"
             >
               {isID ? "Coba Lagi" : "Try Again"}
             </button>
@@ -478,7 +482,7 @@ function BlogsContent() {
 
         {/* ARTICLES */}
         {!loading && !error && filteredBlogs.length > 0 && (
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
+          <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-2 lg:gap-5">
             {filteredBlogs.map((blog) => (
               <BlogCard
                 key={blog.id}
@@ -491,7 +495,7 @@ function BlogsContent() {
 
         {/* EMPTY STATE */}
         {!loading && !error && filteredBlogs.length === 0 && (
-          <div className="rounded-xl border border-black/[0.07] bg-white px-5 py-14 text-center sm:py-16">
+          <div className="rounded-2xl border border-black/[0.07] bg-white px-5 py-10 text-center sm:py-16">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#F59E0B]/10 text-[#B77900]">
               <svg
                 aria-hidden="true"
@@ -506,6 +510,7 @@ function BlogsContent() {
                   stroke="currentColor"
                   strokeWidth="1.6"
                 />
+
                 <path
                   d="m16 16 4 4"
                   stroke="currentColor"
@@ -525,7 +530,7 @@ function BlogsContent() {
                   : "No articles yet"}
             </h3>
 
-            <p className="mx-auto mt-2 max-w-sm text-xs leading-6 text-neutral-500">
+            <p className="mx-auto mt-2 max-w-sm text-xs leading-6 text-neutral-500 sm:text-sm">
               {search.trim()
                 ? isID
                   ? "Coba gunakan kata kunci lain atau periksa kembali ejaan pencarian."
@@ -539,9 +544,11 @@ function BlogsContent() {
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="mt-5 text-xs font-semibold text-[#B77900] transition-colors hover:text-[#F59E0B]"
+                className="mt-5 min-h-11 text-xs font-semibold text-[#B77900] transition-colors hover:text-[#F59E0B]"
               >
-                {isID ? "Tampilkan semua artikel" : "Show all articles"}
+                {isID
+                  ? "Tampilkan semua artikel"
+                  : "Show all articles"}
               </button>
             )}
           </div>
