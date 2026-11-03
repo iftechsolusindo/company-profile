@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { Plus_Jakarta_Sans } from "next/font/google";
@@ -40,7 +41,7 @@ export default function NavbarSecondary() {
         {/* =====================================================
             LOGO
         ====================================================== */}
-        <a
+        <Link
           href="/"
           className="group flex shrink-0 items-center gap-2.5"
         >
@@ -64,62 +65,62 @@ export default function NavbarSecondary() {
               SOLUSINDO
             </span>
           </div>
-        </a>
+        </Link>
 
         {/* =====================================================
             NAVIGATION
         ====================================================== */}
         <nav className="hidden items-center gap-7 lg:flex">
           {/* Home */}
-          <a
+          <Link
             href="/#home"
             className="text-[13px] font-medium text-gray-600 transition-colors duration-200 hover:text-[#F59E0B]"
           >
             {isID ? "Beranda" : "Home"}
-          </a>
+          </Link>
 
           {/* About Us */}
-          <a
-            href="/about"
+          <Link
+            href="/about-us"
             className="relative text-[13px] font-semibold text-[#F59E0B]"
           >
             {isID ? "Tentang Kami" : "About Us"}
 
             {/* Active Indicator */}
             <span className="absolute -bottom-[7px] left-0 h-[2px] w-5 rounded-full bg-[#F59E0B]" />
-          </a>
+          </Link>
 
           {/* Solutions */}
-          <a
-            href="/#solutions"
+          <Link
+            href="/solutions"
             className="text-[13px] font-medium text-gray-600 transition-colors duration-200 hover:text-[#F59E0B]"
           >
             {isID ? "Solusi" : "Solutions"}
-          </a>
+          </Link>
 
           {/* Projects */}
-          <a
-            href="/#projects"
+          <Link
+            href="/projects"
             className="text-[13px] font-medium text-gray-600 transition-colors duration-200 hover:text-[#F59E0B]"
           >
             {isID ? "Proyek" : "Projects"}
-          </a>
+          </Link>
 
           {/* Blog */}
-          <a
-            href="/#blog"
+          <Link
+            href="/blogs"
             className="text-[13px] font-medium text-gray-600 transition-colors duration-200 hover:text-[#F59E0B]"
           >
             Blog
-          </a>
+          </Link>
 
           {/* Contact */}
-          <a
-            href="/#contact"
+          <Link
+            href="/contactus"
             className="text-[13px] font-medium text-gray-600 transition-colors duration-200 hover:text-[#F59E0B]"
           >
             {isID ? "Kontak" : "Contact Us"}
-          </a>
+          </Link>
         </nav>
 
         {/* =====================================================

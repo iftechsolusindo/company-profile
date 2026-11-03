@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { canOptimizeImage } from "../lib/image-utils";
 
 import NavbarMain from "../components/global/NavbarMain";
 import Footer from "../components/global/Footer";
 import CTA from "../components/main/CTA";
 
 import {
-  LanguageProvider,
   useLanguage,
 } from "../components/global/LanguageProvider";
 
@@ -74,6 +76,7 @@ function ProjectsContent() {
 
         const response = await fetch("/api/projects", {
           signal: controller.signal,
+          cache: "default",
         });
 
         if (!response.ok) {
@@ -371,8 +374,8 @@ function ProjectsContent() {
                   className="group flex h-full min-w-0 flex-col overflow-hidden rounded-lg border border-black/[0.07] bg-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
                 >
                   {/* CARD IMAGE */}
-                  <a
-                    href={`/projects/${project.slug}`}
+                  <Link
+                    href={`/projects/${encodeURIComponent(project.slug)}`}
                     aria-label={
                       isID
                         ? `Lihat detail ${project.title}`
@@ -381,9 +384,12 @@ function ProjectsContent() {
                     className="relative block aspect-[16/10] overflow-hidden bg-neutral-200"
                   >
                     {project.imageUrl ? (
-                      <img
+                      <Image
                         src={project.imageUrl}
                         alt={project.title}
+                        fill
+                        unoptimized={!canOptimizeImage(project.imageUrl)}
+                        sizes="(max-width: 768px) 100vw, 50vw"
                         loading="lazy"
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
@@ -406,7 +412,7 @@ function ProjectsContent() {
                         {project.year}
                       </span>
                     )}
-                  </a>
+                  </Link>
 
                   {/* CARD CONTENT */}
                   <div className="flex flex-1 flex-col p-3 sm:p-3.5">
@@ -452,8 +458,8 @@ function ProjectsContent() {
 
                     {/* CARD FOOTER */}
                     <div className="mt-auto pt-3">
-                      <a
-                        href={`/projects/${project.slug}`}
+                      <Link
+                        href={`/projects/${encodeURIComponent(project.slug)}`}
                         className="inline-flex items-center gap-1.5 border-b border-[#F59E0B] pb-1 text-[10px] font-semibold text-neutral-800 transition-colors hover:text-[#B77900]"
                       >
                         {isID ? "Lihat Detail" : "View Details"}
@@ -472,7 +478,7 @@ function ProjectsContent() {
                             strokeLinejoin="round"
                           />
                         </svg>
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </article>
@@ -489,9 +495,5 @@ function ProjectsContent() {
 }
 
 export default function ProjectsPage() {
-  return (
-    <LanguageProvider>
-      <ProjectsContent />
-    </LanguageProvider>
-  );
+  return <ProjectsContent />;
 }

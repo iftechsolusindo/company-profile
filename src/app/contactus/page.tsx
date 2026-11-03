@@ -2,12 +2,12 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 import Footer from "../components/global/Footer";
 import NavbarMain from "../components/global/NavbarMain";
 
 import {
-  LanguageProvider,
   useLanguage,
 } from "../components/global/LanguageProvider";
 
@@ -126,14 +126,16 @@ function ContactContent() {
           <div className="grid grid-cols-1 items-stretch gap-9 lg:grid-cols-12 lg:gap-12">
             {/* LEFT — OFFICE IMAGE */}
             <div className="relative min-h-[320px] overflow-hidden rounded-xl bg-neutral-800 sm:min-h-[400px] lg:col-span-5 lg:min-h-[530px]">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=85"
                 alt={
                   isID
                     ? "Interior kantor modern dengan area kerja profesional"
                     : "Modern office interior with a professional workspace"
                 }
-                loading="eager"
+                fill
+                sizes="(max-width: 1024px) 100vw, 42vw"
+                priority
                 className="absolute inset-0 h-full w-full object-cover"
               />
 
@@ -182,7 +184,7 @@ function ContactContent() {
                   </>
                 ) : (
                   <>
-                    Let's build
+                    Let&apos;s build
                     <br />
                     <span className="text-[#F59E0B]">
                       something great.
@@ -604,9 +606,5 @@ Jawa Tengah 56172
 }
 
 export default function ContactPage() {
-  return (
-    <LanguageProvider>
-      <ContactContent />
-    </LanguageProvider>
-  );
+  return <ContactContent />;
 }

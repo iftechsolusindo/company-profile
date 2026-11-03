@@ -3,6 +3,9 @@ import { prisma } from "../../lib/prisma";
 import { supabaseAdmin } from "../../lib/supabase";
 
 const BUCKET_NAME = "Iftech-projects";
+const PUBLIC_CACHE_HEADERS = {
+  "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=300",
+};
 
 export async function GET() {
   try {
@@ -52,20 +55,24 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       projects: projectsWithImages,
-    });
+    }, { headers: PUBLIC_CACHE_HEADERS });
   } catch (error) {
-    console.error("Failed to fetch projects:", error);
+    const errorCode =
+      error && typeof error === "object" && "code" in error
+        ? String(error.code)
+        : "UNKNOWN";
+    console.error("Failed to fetch projects. Error code:", errorCode);
 
     return NextResponse.json(
       {
         success: false,
-        message:
-          error instanceof Error
-            ? error.message
-            : "Failed to fetch projects.",
+        message: "Project data is temporarily unavailable.",
       },
       {
-        status: 500,
+        status: 503,
+        headers: {
+          "Retry-After": "30",
+        },
       }
     );
   }

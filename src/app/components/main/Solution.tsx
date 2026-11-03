@@ -1,6 +1,7 @@
 
 "use client";
 
+import Image from "next/image";
 import { useLanguage } from "../global/LanguageProvider";
 
 interface StrengthCardProps {
@@ -143,9 +144,11 @@ export default function OurStrengthSection() {
               className={`group relative h-56 overflow-hidden rounded-xl bg-[#113a5d] shadow-sm sm:h-72 sm:rounded-2xl md:h-80 ${item.colSpanClass}`}
             >
               {/* Image */}
-              <img
+              <Image
                 src={item.imageSrc}
                 alt={item.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />

@@ -4,6 +4,9 @@ import { prisma } from "../../lib/prisma";
 import { supabaseAdmin } from "../../lib/supabase";
 
 const BUCKET_NAME = "Iftech-blogs";
+const PUBLIC_CACHE_HEADERS = {
+  "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=300",
+};
 
 export async function GET() {
   try {
@@ -19,7 +22,6 @@ export async function GET() {
         title: true,
         slug: true,
         excerpt: true,
-        contentUrl: true,
         imageUrl: true,
         published: true,
         updatedAt: true,
@@ -30,11 +32,11 @@ export async function GET() {
       let imageUrl: string | null = null;
 
       if (blog.imageUrl) {
-        const { data } = supabaseAdmin.storage
-          .from(BUCKET_NAME)
-          .getPublicUrl(blog.imageUrl);
-
-        imageUrl = data.publicUrl;
+        imageUrl = /^https?:\/\//i.test(blog.imageUrl)
+          ? blog.imageUrl
+          : supabaseAdmin.storage
+              .from(BUCKET_NAME)
+              .getPublicUrl(blog.imageUrl).data.publicUrl;
       }
 
       return {
@@ -51,21 +53,25 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       blogs: blogsWithImageUrl,
-    });
+    }, { headers: PUBLIC_CACHE_HEADERS });
   } catch (error) {
-    console.error("Failed to fetch blogs:", error);
+    const errorCode =
+      error && typeof error === "object" && "code" in error
+        ? String(error.code)
+        : "UNKNOWN";
+
+    console.error("Failed to fetch blogs. Error code:", errorCode);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to fetch blogs.",
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unknown error",
+        message: "Blog data is temporarily unavailable.",
       },
       {
-        status: 500,
+        status: 503,
+        headers: {
+          "Retry-After": "30",
+        },
       }
     );
   }

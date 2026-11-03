@@ -6,36 +6,33 @@ import ServicesSection from "./components/main/ServiceSection";
 import BlogSection from "./components/main/BlogSection";
 import HeroSection from "./components/main/HeroSection";
 import TechSlider from "./components/main/TechSlider";
-import { LanguageProvider } from "./components/global/LanguageProvider";
 
 export default function Home() {
   return (
-    <LanguageProvider>
-      <main className="min-h-screen bg-white">
-        {/* Navbar */}
-        <NavbarMain />
+    <main className="min-h-screen bg-white">
+      {/* Navbar */}
+      <NavbarMain />
 
-        {/* Hero */}
-        <HeroSection />
+      {/* Hero */}
+      <HeroSection />
 
-        {/* Technology */}
-        <TechSlider />
+      {/* Technology */}
+      <TechSlider />
 
-        {/* Services */}
-        <ServicesSection />
+      {/* Services */}
+      <ServicesSection />
 
-        {/* Our Strength */}
-        <OurStrengthSection />
+      {/* Our Strength */}
+      <OurStrengthSection />
 
-        {/* Blog */}
-        <BlogSection />
+      {/* Blog */}
+      <BlogSection />
 
-        {/* CTA */}
-        <CTA />
+      {/* CTA */}
+      <CTA />
 
-        {/* Footer */}
-        <Footer />
-      </main>
-    </LanguageProvider>
+      {/* Footer */}
+      <Footer />
+    </main>
   );
 }

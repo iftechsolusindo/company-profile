@@ -2,13 +2,14 @@
 "use client";
 
 import { type ReactNode } from "react";
+import Image from "next/image";
+import { canOptimizeImage } from "../lib/image-utils";
 
 import Footer from "../components/global/Footer";
 import CTA from "../components/main/CTA";
 import NavbarMain from "../components/global/NavbarMain";
 
 import {
-  LanguageProvider,
   useLanguage,
 } from "../components/global/LanguageProvider";
 
@@ -437,9 +438,12 @@ function SolutionsContent() {
                 {/* BACKGROUND IMAGE */}
 
                 <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                  <img
+                  <Image
                     src={item.image}
                     alt=""
+                    fill
+                    unoptimized={!canOptimizeImage(item.image)}
+                    sizes="100vw"
                     className="h-full w-full scale-[1.06] object-cover opacity-0 saturate-50 blur-[1px] transition-all duration-700 ease-out group-hover:scale-100 group-hover:opacity-[0.08]"
                   />
 
@@ -573,9 +577,13 @@ function SolutionsContent() {
 
                     <div className="relative z-10 flex items-center gap-3">
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-100 bg-gray-50 p-2 transition-all duration-500 ease-out group-hover:-translate-y-0.5 group-hover:border-[#F59E0B]/20 group-hover:bg-white group-hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
-                        <img
+                        <Image
                           src={technology.logo}
                           alt={`${technology.name} logo`}
+                          width={64}
+                          height={64}
+                          unoptimized={!canOptimizeImage(technology.logo)}
+                          sizes="40px"
                           loading="lazy"
                           className="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-110"
                         />
@@ -668,9 +676,5 @@ function SolutionsContent() {
 }
 
 export default function SolutionsPage() {
-  return (
-    <LanguageProvider>
-      <SolutionsContent />
-    </LanguageProvider>
-  );
+  return <SolutionsContent />;
 }

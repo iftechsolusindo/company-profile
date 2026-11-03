@@ -52,7 +52,7 @@ export default function HeroSection() {
             {/* Buttons */}
             <div className="mt-7 flex w-full max-w-[360px] flex-col justify-center gap-3 sm:mt-8 sm:max-w-none sm:flex-row sm:gap-4">
               <a
-                href="#contact"
+                href="/contactus"
                 className="flex min-h-[46px] w-full items-center justify-center rounded-full bg-white px-6 py-3 font-[var(--font-inter)] text-xs font-semibold text-gray-900 transition-colors duration-300 hover:bg-gray-100 sm:min-h-[48px] sm:w-auto sm:min-w-[190px] sm:px-7 sm:text-sm md:min-h-[50px] md:text-[15px]"
               >
                 {isID ? "Konsultasikan Kebutuhan" : "Discuss Your Needs"}

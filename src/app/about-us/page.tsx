@@ -3,12 +3,10 @@
 
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
+import Image from "next/image";
 
 import Footer from "../components/global/Footer";
-import {
-  LanguageProvider,
-  useLanguage,
-} from "../components/global/LanguageProvider";
+import { useLanguage } from "../components/global/LanguageProvider";
 import NavbarMain from "../components/global/NavbarMain";
 
 type IconName =
@@ -255,13 +253,15 @@ function CoreValueCarousel({ isID }: { isID: boolean }) {
       <div className="grid grid-cols-1 md:min-h-[340px] md:grid-cols-[0.85fr_1.15fr]">
         {/* LEFT IMAGE PANEL */}
         <div className="relative flex min-h-[230px] flex-col justify-end overflow-hidden bg-neutral-900 p-5 text-white sm:min-h-[280px] sm:p-8 md:min-h-[340px] md:p-10">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1000&q=85"
             alt={
               isID
                 ? "Tim profesional berkolaborasi mengembangkan solusi teknologi"
                 : "Professionals collaborating on technology solutions"
             }
+            fill
+            sizes="(max-width: 768px) 100vw, 46vw"
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
           />
@@ -408,41 +408,6 @@ function AboutContent() {
       text: isID
         ? "Kami ingin menjadi partner jangka panjang, bukan hanya vendor dalam satu proyek."
         : "We aim to become a long-term partner, not simply a vendor for one project.",
-    },
-  ];
-
-  const approach = [
-    {
-      number: "01",
-      title: "Discover",
-      icon: "search" as IconName,
-      text: isID
-        ? "Memahami masalah, kebutuhan, dan tujuan bisnis."
-        : "Understanding the problem, needs, and business goals.",
-    },
-    {
-      number: "02",
-      title: "Design",
-      icon: "design" as IconName,
-      text: isID
-        ? "Menyusun pengalaman dan solusi yang tepat."
-        : "Designing the right experience and solution.",
-    },
-    {
-      number: "03",
-      title: "Develop",
-      icon: "code" as IconName,
-      text: isID
-        ? "Membangun produk menggunakan teknologi yang sesuai."
-        : "Building the product with the right technology.",
-    },
-    {
-      number: "04",
-      title: "Deliver & Grow",
-      icon: "rocket" as IconName,
-      text: isID
-        ? "Meluncurkan solusi dan terus mengembangkannya."
-        : "Launching the solution and continuously improving it.",
     },
   ];
 
@@ -909,9 +874,5 @@ function AboutContent() {
 }
 
 export default function AboutPage() {
-  return (
-    <LanguageProvider>
-      <AboutContent />
-    </LanguageProvider>
-  );
+  return <AboutContent />;
 }

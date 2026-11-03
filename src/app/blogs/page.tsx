@@ -2,13 +2,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { canOptimizeImage } from "../lib/image-utils";
 
 import Footer from "../components/global/Footer";
 import CTA from "../components/main/CTA";
 import NavbarMain from "../components/global/NavbarMain";
 
 import {
-  LanguageProvider,
   useLanguage,
 } from "../components/global/LanguageProvider";
 
@@ -41,8 +43,8 @@ function BlogCard({
   return (
     <article className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#F59E0B]/40 hover:shadow-[0_16px_40px_rgba(0,0,0,0.07)] sm:flex-row">
       {/* IMAGE */}
-      <a
-        href={`/blogs/${blog.slug}`}
+      <Link
+        href={`/blogs/${encodeURIComponent(blog.slug)}`}
         aria-label={
           isID
             ? `Baca artikel ${blog.title}`
@@ -51,9 +53,12 @@ function BlogCard({
         className="relative block aspect-[16/9] w-full shrink-0 overflow-hidden bg-[#F0F0ED] sm:aspect-auto sm:w-[38%] md:w-[40%]"
       >
         {blog.imageUrl ? (
-          <img
+          <Image
             src={blog.imageUrl}
             alt={blog.title}
+            fill
+            unoptimized={!canOptimizeImage(blog.imageUrl)}
+            sizes="(max-width: 640px) 100vw, 40vw"
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
@@ -76,7 +81,7 @@ function BlogCard({
         <span className="absolute left-3 top-3 rounded-full border border-white/30 bg-black/40 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-white backdrop-blur-sm sm:left-4 sm:top-4">
           IFTECH Journal
         </span>
-      </a>
+      </Link>
 
       {/* CONTENT */}
       <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5 md:p-6">
@@ -116,8 +121,8 @@ function BlogCard({
             IFTECH SOLUSINDO
           </span>
 
-          <a
-            href={`/blogs/${blog.slug}`}
+          <Link
+            href={`/blogs/${encodeURIComponent(blog.slug)}`}
             className="inline-flex shrink-0 items-center gap-2 text-[10px] font-semibold text-neutral-800 transition-colors hover:text-[#B77900] sm:text-[11px]"
           >
             {isID ? "Baca Artikel" : "Read Article"}
@@ -136,7 +141,7 @@ function BlogCard({
                 strokeLinejoin="round"
               />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
     </article>
@@ -565,9 +570,5 @@ function BlogsContent() {
 }
 
 export default function BlogsPage() {
-  return (
-    <LanguageProvider>
-      <BlogsContent />
-    </LanguageProvider>
-  );
+  return <BlogsContent />;
 }

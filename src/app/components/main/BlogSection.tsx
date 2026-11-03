@@ -2,10 +2,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
+import { canOptimizeImage } from "../../lib/image-utils";
 
 interface BlogPost {
-  id: string;
+  id: number;
   title: string;
   slug: string;
   excerpt: string | null;
@@ -18,34 +20,30 @@ interface BlogResponse {
   success: boolean;
   blogs?: BlogPost[];
   message?: string;
-  error?: string;
 }
 
 export default function BlogSection() {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     async function fetchBlogs() {
       try {
         const response = await fetch("/api/blogs", {
-          cache: "no-store",
+          cache: "default",
         });
 
         const data: BlogResponse = await response.json();
 
         if (!response.ok || !data.success) {
-          throw new Error(
-            data.error ||
-              data.message ||
-              "Failed to fetch blogs."
-          );
+          throw new Error(data.message || "Failed to fetch blogs.");
         }
 
         // Tampilkan maksimal 4 artikel terbaru.
         setBlogPosts((data.blogs ?? []).slice(0, 4));
-      } catch (error) {
-        console.error("Failed to fetch blogs:", error);
+      } catch {
+        setLoadError(true);
         setBlogPosts([]);
       } finally {
         setLoading(false);
@@ -119,7 +117,9 @@ export default function BlogSection() {
         {!loading && blogPosts.length === 0 && (
           <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-8 text-center sm:px-6 sm:py-10">
             <p className="text-xs font-medium text-gray-500 sm:text-sm">
-              No blog articles available.
+              {loadError
+                ? "Blog articles are temporarily unavailable. Please try again later."
+                : "No blog articles available."}
             </p>
           </div>
         )}
@@ -130,16 +130,19 @@ export default function BlogSection() {
             {blogPosts.map((post) => (
               <Link
                 key={post.id}
-                href={`/blog/${post.slug}`}
+                href={`/blogs/${encodeURIComponent(post.slug)}`}
                 className="group flex min-w-0 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_4px_16px_-8px_rgba(0,0,0,0.18)] transition-all duration-300 hover:-translate-y-1 hover:border-gray-300 hover:shadow-[0_12px_24px_-10px_rgba(0,0,0,0.22)]"
               >
                 {/* Image */}
                 <div className="relative h-52 w-full shrink-0 overflow-hidden bg-gray-100 sm:h-40">
                   {post.imageUrl ? (
                     <>
-                      <img
+                      <Image
                         src={post.imageUrl}
                         alt={post.title}
+                        fill
+                        unoptimized={!canOptimizeImage(post.imageUrl)}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                         loading="lazy"
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />

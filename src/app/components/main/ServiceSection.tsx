@@ -170,7 +170,7 @@ export default function ServicesSection() {
             {/* CTA */}
             <div>
               <a
-                href="#contact"
+                href="/contactus"
                 className="group inline-flex min-h-[42px] items-center justify-center rounded-full bg-[#F59E0B] px-5 py-2.5 font-[var(--font-inter)] text-[10px] font-semibold tracking-wide text-white transition-all duration-300 hover:bg-[#D97706] hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F59E0B] sm:min-h-[48px] sm:px-6 sm:py-3 sm:text-sm"
               >
                 {language === "ID"

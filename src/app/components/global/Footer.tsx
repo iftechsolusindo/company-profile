@@ -2,6 +2,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useLanguage } from "./LanguageProvider";
 
 export default function Footer() {
@@ -23,8 +24,8 @@ export default function Footer() {
             ================================= */}
             <div className="lg:col-span-5">
               {/* Logo */}
-              <a
-                href="#home"
+              <Link
+                href="/#home"
                 className="group inline-flex items-center gap-3"
               >
                 <Image
@@ -44,7 +45,7 @@ export default function Footer() {
                     SOLUSINDO
                   </span>
                 </div>
-              </a>
+              </Link>
 
               {/* Description */}
               <p className="mt-7 max-w-sm text-[13px] leading-6 text-[#666666]">
@@ -88,57 +89,48 @@ export default function Footer() {
 
               <ul className="mt-7 space-y-4 text-[13px] text-[#666666]">
                 <li>
-                  <a
-                    href="#home"
+                  <Link
+                    href="/#home"
                     className="transition-colors duration-200 hover:text-[#F59E0B]"
                   >
                     {isID ? "Beranda" : "Home"}
-                  </a>
+                  </Link>
                 </li>
 
                 <li>
-                  <a
-                    href="#solutions"
+                  <Link
+                    href="/#solutions"
                     className="transition-colors duration-200 hover:text-[#F59E0B]"
                   >
                     {isID ? "Solusi" : "Solutions"}
-                  </a>
+                  </Link>
                 </li>
 
                 <li>
-                  <a
-                    href="#projects"
+                  <Link
+                    href="/projects"
                     className="transition-colors duration-200 hover:text-[#F59E0B]"
                   >
                     {isID ? "Proyek" : "Projects"}
-                  </a>
+                  </Link>
                 </li>
 
                 <li>
-                  <a
-                    href="#career"
-                    className="transition-colors duration-200 hover:text-[#F59E0B]"
-                  >
-                    Career
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#blog"
+                  <Link
+                    href="/blogs"
                     className="transition-colors duration-200 hover:text-[#F59E0B]"
                   >
                     Blog
-                  </a>
+                  </Link>
                 </li>
 
                 <li>
-                  <a
-                    href="#contact"
+                  <Link
+                    href="/contactus"
                     className="transition-colors duration-200 hover:text-[#F59E0B]"
                   >
                     {isID ? "Kontak" : "Contact"}
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
